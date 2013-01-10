@@ -1,10 +1,10 @@
 /*global define*/
 define([
-    'scalejs.mvvm/mvvm',
-    'scalejs.controls/content',
-    'scalejs.controls/module',
-    'scalejs.controls/listview',
-    'scalejs.bindings/change'
+    './scalejs.mvvm/mvvm',
+    './scalejs.controls/content',
+    './scalejs.controls/module',
+    './scalejs.controls/listview',
+    './scalejs.bindings/change'
 ], function (
     mvvm
 ) {

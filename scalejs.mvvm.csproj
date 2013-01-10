@@ -29,7 +29,7 @@
     <Content Include="Scripts\text.js" />
     <Content Include="test\all.tests.js" />
     <Content Include="Properties\test.js" />
-    <Content Include="test\mvvm.test.js" />
+    <Content Include="test\scalejs.mvvm.test.js" />
     <Content Include="tools\install.ps1" />
     <Content Include="tools\uninstall.ps1" />
   </ItemGroup>

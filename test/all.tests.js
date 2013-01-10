@@ -1,2 +1,2 @@
 ﻿/*global define*/
-define(['./mvvm.test']);
+define(['./scalejs.mvvm.test']);
