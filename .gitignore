@@ -1,0 +1,8 @@
+
+/.nuget/nuget.exe
+/TestResults
+/packages
+/scalejs.mvvm.csproj.user
+/scalejs.mvvm.v11.suo
+/build
+/obj
