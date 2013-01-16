@@ -15,8 +15,8 @@
     <Content Include="scalejs.controls\listview.js" />
     <Content Include="scalejs.controls\module.js" />
     <Content Include="scalejs.mvvm\mvvm.js" />
-    <Content Include="Scripts\knockout-2.2.0.debug.js" />
-    <Content Include="Scripts\knockout-2.2.0.js" />
+    <Content Include="Scripts\knockout-2.2.1.debug.js" />
+    <Content Include="Scripts\knockout-2.2.1.js" />
     <Content Include="Scripts\knockout-classBindingProvider.js" />
     <Content Include="Scripts\knockout-classBindingProvider.min.js" />
     <Content Include="Scripts\knockout.mapping-latest.debug.js" />
