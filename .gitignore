@@ -6,3 +6,7 @@
 /scalejs.mvvm.v11.suo
 /build
 /obj
+/scalejs.mvvm/build
+/scalejs.mvvm/obj
+/scalejs.mvvm.test/build
+/scalejs.mvvm.test/obj

@@ -1,12 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "scalejs.mvvm", "scalejs.mvvm.csproj", "{E151111B-B007-46AC-8021-D265290E6509}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9E64D321-5DF7-4F6D-BA12-D928CBDE3833}"
 	ProjectSection(SolutionItems) = preProject
 		JSLintOptions.xml = JSLintOptions.xml
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "scalejs.mvvm", "scalejs.mvvm\scalejs.mvvm.csproj", "{E151111B-B007-46AC-8021-D265290E6509}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "scalejs.mvvm.test", "scalejs.mvvm.test\scalejs.mvvm.test.csproj", "{7D9BBE50-A33C-4A0C-B660-9512BDCC9951}"
 EndProject
 Global
 	GlobalSection(JSLint) = preSolution
@@ -18,6 +20,8 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{E151111B-B007-46AC-8021-D265290E6509}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E151111B-B007-46AC-8021-D265290E6509}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D9BBE50-A33C-4A0C-B660-9512BDCC9951}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D9BBE50-A33C-4A0C-B660-9512BDCC9951}.Debug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

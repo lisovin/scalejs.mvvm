@@ -1,5 +1,5 @@
 ﻿({
-	mainConfigFile: 'test.js',
+	mainConfigFile: '../bootstrapper.js',
     include: 'scalejs.mvvm',
     exclude: [
         'scalejs!core',

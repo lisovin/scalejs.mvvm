@@ -9,27 +9,21 @@
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="js\scalejs.bindings\change.js" />
-    <Content Include="js\scalejs.controls\content.js" />
-    <Content Include="js\scalejs.controls\listview.js" />
-    <Content Include="js\scalejs.controls\module.js" />
-    <Content Include="js\scalejs.mvvm.js" />
-    <Content Include="js\scalejs.mvvm\mvvm.js" />
     <Content Include="Properties\build.rjs" />
-    <Content Include="Scripts\jasmine.js" />
+    <Content Include="scalejs.bindings\change.js" />
+    <Content Include="scalejs.controls\content.js" />
+    <Content Include="scalejs.controls\listview.js" />
+    <Content Include="scalejs.controls\module.js" />
+    <Content Include="scalejs.mvvm\mvvm.js" />
     <Content Include="Scripts\knockout-2.2.0.debug.js" />
     <Content Include="Scripts\knockout-2.2.0.js" />
     <Content Include="Scripts\knockout-classBindingProvider.js" />
     <Content Include="Scripts\knockout-classBindingProvider.min.js" />
     <Content Include="Scripts\knockout.mapping-latest.debug.js" />
     <Content Include="Scripts\knockout.mapping-latest.js" />
-    <Content Include="Scripts\require.js" />
-    <Content Include="Scripts\scalejs-0.1.1.js" />
-    <Content Include="Scripts\scalejs-0.1.1.min.js" />
+    <Content Include="Scripts\scalejs-0.1.11.js" />
+    <Content Include="Scripts\scalejs-0.1.11.min.js" />
     <Content Include="Scripts\text.js" />
-    <Content Include="test\all.tests.js" />
-    <Content Include="Properties\test.js" />
-    <Content Include="test\scalejs.mvvm.test.js" />
     <Content Include="tools\install.ps1" />
     <Content Include="tools\uninstall.ps1" />
   </ItemGroup>
@@ -40,8 +34,7 @@
     </None>
   </ItemGroup>
   <PropertyGroup>
-    <ScalejsExtension>True</ScalejsExtension>
-    <ScalejsBaseUrl>js</ScalejsBaseUrl>
+    <ScalejsProjectType>Extension</ScalejsProjectType>
   </PropertyGroup>
   <PropertyGroup>
     <RootNamespace>scalejs.mvvm</RootNamespace>
