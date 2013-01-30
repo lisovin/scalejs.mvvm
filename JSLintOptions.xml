@@ -697,5 +697,5 @@
   <IgnoreErrorStart>/*ignore jslint start*/</IgnoreErrorStart>
   <IgnoreErrorEnd>/*ignore jslint end*/</IgnoreErrorEnd>
   <IgnoreErrorLine>//ignore jslint</IgnoreErrorLine>
-  <RunOnSave>false</RunOnSave>
+  <RunOnSave>true</RunOnSave>
 </Options>

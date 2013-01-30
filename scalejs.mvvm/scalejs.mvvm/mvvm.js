@@ -13,6 +13,7 @@ define([
     'use strict';
 
     var has = core.object.has,
+        iter = core.array.iter,
         classBindingProvider = new ClassBindingProvider();
 
     ko.bindingProvider.instance = classBindingProvider;
@@ -39,16 +40,6 @@ define([
     }
 
     function toViewModel(data, viewModel, mappings) {
-        /*
-    var knockoutStyleMappings = {};
-    // Convert our simple mappings to what the mapping plugin expects
-    // See http://knockoutjs.com/documentation/plugins-mapping.html
-    for (var mk in mappings)
-    knockoutStyleMappings[mk] = {
-    create: function (opt) {
-    return mappings[mk](opt.data);
-    }
-    }; */
         var knockoutStyleMappings = core.linq.enumerable
                 .from(mappings)
                 .select(function (kv) {
@@ -81,48 +72,53 @@ define([
         return namespace + '/' + control;
     }
 
+    function appendTemplate(html) {
+        var head = document.getElementsByTagName('head')[0],
+            div = document.createElement('div'),
+            templateHtml,
+            script;
+
+        div.innerHTML = html;
+
+        iter(div.childNodes, function (childNode) {
+            if (childNode.nodeType === 1) {
+                templateHtml = childNode.innerHTML;
+                script = document.createElement('script');
+                script.type = 'text/html';
+                script.id = childNode.id;
+                script.innerHTML = templateHtml;
+                head.appendChild(script);
+            }
+        });
+
+        div.innerHTML = '';
+    }
+
+
     function buildSandbox(sandbox) {
         var $ = core.dom.$;
 
         function createView(options) {
-            /*var textDependencies = ko.utils.arrayMap(options.templates || [], function (template) {
-                    return 'text!' + template;
-                }),
-                dependencies = textDependencies.concat(options.bindings || []);
-                //templateHtml = options.html || defaultTemplateHtml,
-                //bindings = options.bindings || { },*/
             var dataContext = options.dataContext || { },
                 templates = options.templates || [],
                 bindings = options.bindings || [],
-                i,
                 moduleBindings = { },
                 moduleId = sandbox.getModuleId(),
                 moduleClass = moduleId,
                 moduleBaseClass = 'scalejs-module-' + moduleId,
                 templateId = moduleId + '_template',
-                defaultTemplateHtml = '<div id="' + templateId + '" style="display: none"></div>',
-                moduleTemplate = $(templateId),
-                templatesDiv = $('scalejs-templates'),
-                box,
-                bindingsOrFactory,
-                bindingsInstance;
+                defaultTemplateHtml = '<div id="' + templateId + '_template"></div>',
+                moduleTemplate = $('#' + templateId),
+                box;
 
             // append template to document body if it doesn't exist yet
             if (!has(moduleTemplate)) {
-                // ensure 'templates' div exists
-                if (!has(templatesDiv)) {
-                    core.dom.appendElementHtml(document.body,
-                        '<div id="scalejs-templates" style="display:none"></div>');
-                    templatesDiv = $('scalejs-templates');
-                }
-                // add templates to dom
-                for (i = 0; i < templates.length; i += 1) {
-                    core.dom.appendElementHtml(templatesDiv, templates[i]);
-                }
+                iter(templates, appendTemplate);
+
                 // if module template still doesn't exist in DOM then create default one
-                moduleTemplate = $(templateId);
+                moduleTemplate = $('#' + templateId);
                 if (!has(moduleTemplate)) {
-                    core.dom.appendElementHtml(templatesDiv, defaultTemplateHtml);
+                    appendTemplate(defaultTemplateHtml);
                 }
             }
             // append module instance div
@@ -141,8 +137,9 @@ define([
                 };
             registerBindings(moduleBindings);
             // register additional module bindings 
-            for (i = 0; i < options.bindings.length; i += 1) {
-                bindingsOrFactory = bindings[i];
+            iter(bindings, function (bindingsOrFactory) {
+                var bindingsInstance;
+
                 if (core.type.is(bindingsOrFactory, 'function')) {
                     bindingsInstance = bindingsOrFactory(sandbox);
                 } else {
@@ -150,15 +147,10 @@ define([
                 }
 
                 registerBindings(bindingsInstance);
-            }
+            });
 
             // apply bindings
             ko.applyBindings(dataContext, box);
-            /*
-            // notify if anyone interested
-            if (is(options, 'onCreated', 'function')) {
-                options.onCreated();
-            }*/
         }
 
         sandbox.mvvm = {
@@ -177,6 +169,8 @@ define([
     return {
         toJson: toJson,
         resolveNamespace: resolveNamespace,
-        buildSandbox: buildSandbox
+        buildSandbox: buildSandbox,
+        registerBindings: registerBindings,
+        appendTemplate: appendTemplate
     };
 });
