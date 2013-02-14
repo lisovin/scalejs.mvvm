@@ -12,9 +12,11 @@ define([
 ) {
     'use strict';
 
-    var has = core.object.has,
+    var //has = core.object.has,
         iter = core.array.iter,
-        classBindingProvider = new ClassBindingProvider();
+        merge = core.object.merge,
+        classBindingProvider = new ClassBindingProvider(),
+        root = ko.observable();
 
     ko.bindingProvider.instance = classBindingProvider;
 
@@ -40,36 +42,14 @@ define([
     }
 
     function toViewModel(data, viewModel, mappings) {
-        var knockoutStyleMappings = core.linq.enumerable
-                .from(mappings)
-                .select(function (kv) {
-                    return {
-                        Key: kv.Key,
-                        create: function (options) { return kv.Value(options.data); }
-                    };
-                })
-                .toObject();
+        var knockoutStyleMappings = Object.keys(mappings).reduce(function (o, k) {
+            return merge(o, {
+                k: k,
+                create: function (options) { return mappings[k](options.data); }
+            });
+        }, {});
 
         return mapping.fromJS(data, knockoutStyleMappings, viewModel);
-    }
-
-    function resolveNamespace(path, namespaces) {
-        var slash = path.lastIndexOf('/'),
-            namespace,
-            control;
-
-        if (slash < 0) {
-            return has(namespaces, '') ? namespaces[''] + '/' + path : path;
-        }
-
-        namespace = path.substring(0, slash);
-        control = path.substring(slash + 1);
-
-        if (has(namespaces, namespace)) {
-            namespace = namespaces[namespace];
-        }
-
-        return namespace + '/' + control;
     }
 
     function appendTemplate(html) {
@@ -94,83 +74,52 @@ define([
         div.innerHTML = '';
     }
 
-
-    function buildSandbox(sandbox) {
-        var $ = core.dom.$;
-
-        function createView(options) {
-            var dataContext = options.dataContext || { },
-                templates = options.templates || [],
-                bindings = options.bindings || [],
-                moduleBindings = { },
-                moduleId = sandbox.getModuleId(),
-                moduleClass = moduleId,
-                moduleBaseClass = 'scalejs-module-' + moduleId,
-                templateId = moduleId + '_template',
-                defaultTemplateHtml = '<div id="' + templateId + '_template"></div>',
-                moduleTemplate = $('#' + templateId),
-                box;
-
-            // append template to document body if it doesn't exist yet
-            if (!has(moduleTemplate)) {
-                iter(templates, appendTemplate);
-
-                // if module template still doesn't exist in DOM then create default one
-                moduleTemplate = $('#' + templateId);
-                if (!has(moduleTemplate)) {
-                    appendTemplate(defaultTemplateHtml);
-                }
-            }
-            // append module instance div
-            box = sandbox.getBox();
-            box.setAttribute('class', moduleClass);
-            box.setAttribute('data-class', moduleBaseClass + ' ' + moduleClass);
-            //sandbox.dom.appendHtml('<div data-class="' + moduleBaseClass + ' ' + moduleClass + '"></div>');
-            // register module binding
-            moduleBindings[moduleBaseClass] =
-                function () {
-                    return {
-                        template: {
-                            name: templateId
-                        }
-                    };
-                };
-            registerBindings(moduleBindings);
-            // register additional module bindings 
-            iter(bindings, function (bindingsOrFactory) {
-                var bindingsInstance;
-
-                if (core.type.is(bindingsOrFactory, 'function')) {
-                    bindingsInstance = bindingsOrFactory(sandbox);
-                } else {
-                    bindingsInstance = bindingsOrFactory;
-                }
-
-                registerBindings(bindingsInstance);
-            });
-
-            // apply bindings
-            ko.applyBindings(dataContext, box);
-        }
-
-        sandbox.mvvm = {
-            createView: createView,
-            observable: observable,
-            observableArray: observableArray,
-            computed: computed,
-            registerBindings: registerBindings,
-            //addCustomBinding: addCustomBinding,
-            //unwrapObservable: unwrapObservable,
-            toJson: toJson,
-            toViewModel: toViewModel
-        };
+    function registerTemplates() {
+        iter(arguments, appendTemplate);
     }
 
+    function renderable(templateId, viewmodel) {
+        return merge(viewmodel, {template: templateId});
+    }
+
+    function init() {
+        var body = document.getElementsByTagName('body')[0];
+
+        body.innerHTML = '<!-- ko class: scalejs-shell --><!-- /ko -->';
+        registerBindings({
+            'scalejs-shell': function () {
+                return {
+                    render: this
+                };
+            }
+        });
+
+        ko.applyBindings(root);
+    }
+
+    init();
+
     return {
-        toJson: toJson,
-        resolveNamespace: resolveNamespace,
-        buildSandbox: buildSandbox,
-        registerBindings: registerBindings,
-        appendTemplate: appendTemplate
+        core: {
+            mvvm: {
+                toJson: toJson,
+                registerBindings: registerBindings,
+                registerTemplates: registerTemplates,
+                appendTemplate: appendTemplate
+            }
+        },
+        sandbox: {
+            mvvm: {
+                observable: observable,
+                observableArray: observableArray,
+                computed: computed,
+                registerBindings: registerBindings,
+                registerTemplates: registerTemplates,
+                toJson: toJson,
+                toViewModel: toViewModel,
+                renderable: renderable,
+                root: root
+            }
+        }
     };
 });

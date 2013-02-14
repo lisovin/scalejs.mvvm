@@ -11,9 +11,7 @@
   <ItemGroup>
     <Content Include="Properties\build.rjs" />
     <Content Include="scalejs.bindings\change.js" />
-    <Content Include="scalejs.controls\content.js" />
-    <Content Include="scalejs.controls\listview.js" />
-    <Content Include="scalejs.controls\module.js" />
+    <Content Include="scalejs.bindings\render.js" />
     <Content Include="scalejs.mvvm.js" />
     <Content Include="scalejs.mvvm\mvvm.js" />
     <Content Include="Scripts\knockout-2.2.1.debug.js" />

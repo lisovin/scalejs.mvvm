@@ -1,24 +1,25 @@
 /*global define*/
 define([
+    'scalejs!core',
+    'knockout',
     './scalejs.mvvm/mvvm',
-    './scalejs.controls/content',
-    './scalejs.controls/module',
-    './scalejs.controls/listview',
-    './scalejs.bindings/change'
+    './scalejs.bindings/change',
+    './scalejs.bindings/render'
 ], function (
-    mvvm
+    core,
+    ko,
+    mvvm,
+    changeBinding,
+    renderBinding
 ) {
     'use strict';
 
-    function buildSandbox(sandbox) {
-        mvvm.buildSandbox(sandbox);
-    }
+    ko.bindingHandlers.change = changeBinding;
+    ko.bindingHandlers.render = renderBinding;
 
-    return {
-        core: {
-            mvvm: mvvm
-        },
-        buildSandbox: buildSandbox
-    };
+    ko.virtualElements.allowedBindings.change = true;
+    ko.virtualElements.allowedBindings.render = true;
+
+    core.registerExtension(mvvm);
 });
 

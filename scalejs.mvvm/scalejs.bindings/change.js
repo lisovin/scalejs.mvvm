@@ -20,7 +20,6 @@ define([
         var unwrap = ko.utils.unwrapObservable,
             value = valueAccessor(),
             properties = unwrap(value),
-            //toEnumerable = core.linq.enumerable.from,
             property,
             handler,
             currentValue,
@@ -55,7 +54,7 @@ define([
     }
     /*jslint unparam: false*/
 
-    ko.bindingHandlers.change = {
+    return {
         init: init
     };
 });

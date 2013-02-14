@@ -23,8 +23,6 @@
     <Content Include="Scripts\require.js" />
     <Content Include="Scripts\scalejs-0.1.11.js" />
     <Content Include="Scripts\scalejs-0.1.11.min.js" />
-    <Content Include="Scripts\scalejs.mvvm-0.1.1.js" />
-    <Content Include="Scripts\scalejs.mvvm-0.1.1.min.js" />
     <Content Include="Scripts\text.js" />
     <Content Include="tests\all.tests.js" />
     <Content Include="tests\scalejs.mvvm.test.js" />
