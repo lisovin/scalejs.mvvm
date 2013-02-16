@@ -1,20 +1,23 @@
 /*global define,document*/
+/*jslint nomen: true*/
 define([
     'knockout',
     'knockout.mapping',
     'knockout-classBindingProvider',
-    'scalejs!core'
+    'scalejs!core',
+    './htmlTemplateSource'
 ], function (
     ko,
     mapping,
     ClassBindingProvider,
-    core
+    core,
+    htmlTemplateSource
 ) {
     'use strict';
 
-    var //has = core.object.has,
-        iter = core.array.iter,
-        merge = core.object.merge,
+    var merge = core.object.merge,
+        toArray = core.array.toArray,
+        ncurry = core.functional.ncurry,
         classBindingProvider = new ClassBindingProvider(),
         root = ko.observable();
 
@@ -52,34 +55,14 @@ define([
         return mapping.fromJS(data, knockoutStyleMappings, viewModel);
     }
 
-    function appendTemplate(html) {
-        var head = document.getElementsByTagName('head')[0],
-            div = document.createElement('div'),
-            templateHtml,
-            script;
-
-        div.innerHTML = html;
-
-        iter(div.childNodes, function (childNode) {
-            if (childNode.nodeType === 1) {
-                templateHtml = childNode.innerHTML;
-                script = document.createElement('script');
-                script.type = 'text/html';
-                script.id = childNode.id;
-                script.innerHTML = templateHtml;
-                head.appendChild(script);
-            }
-        });
-
-        div.innerHTML = '';
-    }
-
     function registerTemplates() {
-        iter(arguments, appendTemplate);
+        toArray(arguments).forEach(htmlTemplateSource.registerTemplates);
     }
 
-    function renderable(templateId, viewmodel) {
-        return merge(viewmodel, {template: templateId});
+    function renderable() {
+        return ncurry(function (templateId, viewmodel) {
+            return merge(viewmodel, {template: templateId});
+        }, 2).apply(null, arguments);
     }
 
     function init() {
@@ -104,8 +87,7 @@ define([
             mvvm: {
                 toJson: toJson,
                 registerBindings: registerBindings,
-                registerTemplates: registerTemplates,
-                appendTemplate: appendTemplate
+                registerTemplates: registerTemplates
             }
         },
         sandbox: {
