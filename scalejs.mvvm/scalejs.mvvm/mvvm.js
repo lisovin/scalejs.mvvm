@@ -17,7 +17,7 @@ define([
 
     var merge = core.object.merge,
         toArray = core.array.toArray,
-        ncurry = core.functional.ncurry,
+        curry = core.functional.curry,
         classBindingProvider = new ClassBindingProvider(),
         root = ko.observable();
 
@@ -59,10 +59,8 @@ define([
         toArray(arguments).forEach(htmlTemplateSource.registerTemplates);
     }
 
-    function renderable() {
-        return ncurry(function (templateId, viewmodel) {
-            return merge(viewmodel, {template: templateId});
-        }, 2).apply(null, arguments);
+    function renderable(templateId, viewmodel) {
+        return merge(viewmodel, {template: templateId});
     }
 
     function init() {
@@ -99,7 +97,7 @@ define([
                 registerTemplates: registerTemplates,
                 toJson: toJson,
                 toViewModel: toViewModel,
-                renderable: renderable,
+                renderable: curry(renderable),
                 root: root
             }
         }
