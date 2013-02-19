@@ -9,20 +9,23 @@
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="config.js" />
     <Content Include="Properties\build.rjs" />
     <Content Include="scalejs.bindings\change.js" />
     <Content Include="scalejs.bindings\render.js" />
     <Content Include="scalejs.mvvm.js" />
     <Content Include="scalejs.mvvm\mvvm.js" />
     <Content Include="scalejs.mvvm\htmlTemplateSource.js" />
+    <Content Include="Scripts\es5-shim.js" />
+    <Content Include="Scripts\es5-shim.min.js" />
     <Content Include="Scripts\knockout-2.2.1.debug.js" />
     <Content Include="Scripts\knockout-2.2.1.js" />
     <Content Include="Scripts\knockout-classBindingProvider.js" />
     <Content Include="Scripts\knockout-classBindingProvider.min.js" />
     <Content Include="Scripts\knockout.mapping-latest.debug.js" />
     <Content Include="Scripts\knockout.mapping-latest.js" />
-    <Content Include="Scripts\scalejs-0.1.11.js" />
-    <Content Include="Scripts\scalejs-0.1.11.min.js" />
+    <Content Include="Scripts\scalejs-0.2.6.js" />
+    <Content Include="Scripts\scalejs-0.2.6.min.js" />
     <Content Include="Scripts\text.js" />
     <Content Include="tools\install.ps1" />
     <Content Include="tools\uninstall.ps1" />
