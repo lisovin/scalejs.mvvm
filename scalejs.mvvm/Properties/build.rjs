@@ -4,7 +4,6 @@
     exclude: [
         'scalejs!core',
 		'knockout',
-		'knockout.mapping',
-		'knockout-classBindingProvider'
+		'knockout.mapping'
     ]
 })

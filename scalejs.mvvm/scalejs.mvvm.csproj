@@ -14,14 +14,13 @@
     <Content Include="scalejs.bindings\change.js" />
     <Content Include="scalejs.bindings\render.js" />
     <Content Include="scalejs.mvvm.js" />
+    <Content Include="scalejs.mvvm\classBindingProvider.js" />
     <Content Include="scalejs.mvvm\mvvm.js" />
     <Content Include="scalejs.mvvm\htmlTemplateSource.js" />
     <Content Include="Scripts\es5-shim.js" />
     <Content Include="Scripts\es5-shim.min.js" />
     <Content Include="Scripts\knockout-2.2.1.debug.js" />
     <Content Include="Scripts\knockout-2.2.1.js" />
-    <Content Include="Scripts\knockout-classBindingProvider.js" />
-    <Content Include="Scripts\knockout-classBindingProvider.min.js" />
     <Content Include="Scripts\knockout.mapping-latest.debug.js" />
     <Content Include="Scripts\knockout.mapping-latest.js" />
     <Content Include="Scripts\scalejs-0.2.6.js" />

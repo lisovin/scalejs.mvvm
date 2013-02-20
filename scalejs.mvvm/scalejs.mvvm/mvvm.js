@@ -3,14 +3,14 @@
 define([
     'knockout',
     'knockout.mapping',
-    'knockout-classBindingProvider',
     'scalejs!core',
+    './classBindingProvider',
     './htmlTemplateSource'
 ], function (
     ko,
     mapping,
-    ClassBindingProvider,
     core,
+    createClassBindingProvider,
     htmlTemplateSource
 ) {
     'use strict';
@@ -18,7 +18,10 @@ define([
     var merge = core.object.merge,
         toArray = core.array.toArray,
         curry = core.functional.curry,
-        classBindingProvider = new ClassBindingProvider(),
+        classBindingProvider = createClassBindingProvider({
+            log: core.log.warn,
+            fallback: true
+        }),
         root = ko.observable();
 
     ko.bindingProvider.instance = classBindingProvider;
@@ -78,8 +81,6 @@ define([
         ko.applyBindings(root);
     }
 
-    init();
-
     return {
         core: {
             mvvm: {
@@ -100,6 +101,7 @@ define([
                 renderable: curry(renderable),
                 root: root
             }
-        }
+        },
+        init: init
     };
 });

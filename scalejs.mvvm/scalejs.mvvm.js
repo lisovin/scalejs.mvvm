@@ -20,6 +20,8 @@ define([
     ko.virtualElements.allowedBindings.change = true;
     ko.virtualElements.allowedBindings.render = true;
 
+    mvvm.init();
+
     core.registerExtension(mvvm);
 });
 
