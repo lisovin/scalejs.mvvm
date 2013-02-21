@@ -71,9 +71,9 @@ define([
 
         body.innerHTML = '<!-- ko class: scalejs-shell --><!-- /ko -->';
         registerBindings({
-            'scalejs-shell': function () {
+            'scalejs-shell': function (context) {
                 return {
-                    render: this
+                    render: context.$data
                 };
             }
         });

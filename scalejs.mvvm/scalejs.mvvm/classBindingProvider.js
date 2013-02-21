@@ -14,8 +14,7 @@ define(['knockout'], function (ko) {
             bindings = {},
             bindingRouter,
             attribute,
-            virtualAttribute,
-            fallback;
+            virtualAttribute;
 
         //returns a binding class, given the class name and the bindings object
         function defaultBindingRouter(className, bindings) {
@@ -49,7 +48,7 @@ define(['knockout'], function (ko) {
                 result = value.indexOf(virtualAttribute) > -1;
             }
 
-            if (!result && fallback) {
+            if (!result && options.fallback) {
                 result = existingProvider.nodeHasBindings(node);
             }
 
