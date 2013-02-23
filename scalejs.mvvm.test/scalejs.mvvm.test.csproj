@@ -28,8 +28,11 @@
     <Content Include="index.test.html" />
     <Content Include="Scripts\scalejs-0.2.7.1.js" />
     <Content Include="Scripts\scalejs-0.2.7.1.min.js" />
+    <Content Include="Scripts\scalejs.mvvm-0.2.3.11.js" />
+    <Content Include="Scripts\scalejs.mvvm-0.2.3.11.min.js" />
+    <Content Include="Scripts\text.js" />
     <Content Include="test\all.tests.js" />
-    <Content Include="test\selectable.test.js" />
+    <Content Include="test\selectableArray.test.js" />
     <Content Include="test\scalejs.mvvm.test.js" />
   </ItemGroup>
   <ItemGroup>

@@ -210,7 +210,7 @@ define('scalejs.mvvm/htmlTemplateSource',[
 /*global define,document*/
 /*jslint nomen: true*/
 /// <reference path="../Scripts/knockout-2.2.1.debug.js" />
-define('scalejs.mvvm/selectable',[
+define('scalejs.mvvm/selectableArray',[
     'knockout',
     'scalejs!core'
 ], function (
@@ -219,6 +219,7 @@ define('scalejs.mvvm/selectable',[
 ) {
     /// <param name="ko" value="window.ko"/>
     
+
     var isObservable = ko.isObservable,
         unwrap = ko.utils.unwrapObservable,
         observable = ko.observable,
@@ -226,7 +227,7 @@ define('scalejs.mvvm/selectable',[
         has = core.object.has,
         array = core.array;
 
-    return function selectable(items, opts) {
+    return function selectableArray(items, opts) {
         /*selectable(items, {
             selectedItem: selectedTile,
             selectionPolicy: 'single',
@@ -315,14 +316,14 @@ define('scalejs.mvvm/mvvm',[
     'scalejs!core',
     './classBindingProvider',
     './htmlTemplateSource',
-    './selectable'
+    './selectableArray'
 ], function (
     ko,
     mapping,
     core,
     createClassBindingProvider,
     htmlTemplateSource,
-    selectable
+    selectableArray
 ) {
     
 
@@ -410,7 +411,7 @@ define('scalejs.mvvm/mvvm',[
                 toJson: toJson,
                 toViewModel: toViewModel,
                 renderable: curry(renderable),
-                selectable: selectable,
+                selectableArray: selectableArray,
                 root: root
             }
         },

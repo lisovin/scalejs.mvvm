@@ -10,6 +10,7 @@ define([
 ) {
     /// <param name="ko" value="window.ko"/>
     'use strict';
+
     var isObservable = ko.isObservable,
         unwrap = ko.utils.unwrapObservable,
         observable = ko.observable,
@@ -17,7 +18,7 @@ define([
         has = core.object.has,
         array = core.array;
 
-    return function selectable(items, opts) {
+    return function selectableArray(items, opts) {
         /*selectable(items, {
             selectedItem: selectedTile,
             selectionPolicy: 'single',

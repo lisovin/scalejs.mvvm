@@ -8,7 +8,7 @@ var require = {
         "knockout":  "Scripts/knockout-2.2.1",
         "knockout.mapping":  "Scripts/knockout.mapping-latest",
         "scalejs":  "Scripts/scalejs-0.2.7.1",
-        "scalejs.mvvm":  "Scripts/scalejs.mvvm-0.2.3.10",
+        "scalejs.mvvm":  "Scripts/scalejs.mvvm-0.2.3.11",
         "text":  "Scripts/text"
     },
     "scalejs":  {

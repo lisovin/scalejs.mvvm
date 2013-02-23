@@ -6,14 +6,14 @@ define([
     'scalejs!core',
     './classBindingProvider',
     './htmlTemplateSource',
-    './selectable'
+    './selectableArray'
 ], function (
     ko,
     mapping,
     core,
     createClassBindingProvider,
     htmlTemplateSource,
-    selectable
+    selectableArray
 ) {
     'use strict';
 
@@ -101,7 +101,7 @@ define([
                 toJson: toJson,
                 toViewModel: toViewModel,
                 renderable: curry(renderable),
-                selectable: selectable,
+                selectableArray: selectableArray,
                 root: root
             }
         },

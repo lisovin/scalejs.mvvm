@@ -6,22 +6,22 @@ define([
     'knockout',
     'scalejs!application'
 ], function (core, ko) {
-    var sandbox = core.buildSandbox('selectable.test'),
+    var sandbox = core.buildSandbox('selectableArray.test'),
         is = core.type.is,
         has = core.object.has,
         observable = ko.observable,
         observableArray = ko.observableArray,
         isObservable = ko.isObservable;
 
-    describe('`selectable`', function () {
-        var selectable = sandbox.mvvm.selectable;
+    describe('`selectableArray`', function () {
+        var selectableArray = sandbox.mvvm.selectableArray;
 
         it('is defined', function () {
-            expect(selectable).toBeDefined();
+            expect(selectableArray).toBeDefined();
         });
 
         it('when argument is array returns an array', function () {
-            var s = selectable([{}, {}]);
+            var s = selectableArray([{}, {}]);
             expect(is(s, 'array')).toBeTruthy();
             expect(s.length).toBe(2);
             expect(s.selectedItem).toBeDefined();
@@ -29,7 +29,7 @@ define([
         });
 
         it('when argument is observable array returns an observable array', function () {
-            var s = selectable(observableArray([{}, {}]));
+            var s = selectableArray(observableArray([{}, {}]));
             expect(isObservable(s)).toBeTruthy();
             expect(s().length).toBe(2);
             expect(s.selectedItem).toBeDefined();
@@ -42,7 +42,7 @@ define([
                 }, {
                     isItemSelected: observable()
                 }],
-                s = selectable(items, {
+                s = selectableArray(items, {
                     isSelectedPath: 'isItemSelected'
                 }),
                 onSelectedItem = jasmine.createSpy();
@@ -62,7 +62,7 @@ define([
                 }, {
                     isItemSelected: observable()
                 }],
-                s = selectable(items, {
+                s = selectableArray(items, {
                     isSelectedPath: 'isItemSelected'
                 }),
                 onSelectedItem = jasmine.createSpy();
@@ -83,7 +83,7 @@ define([
                 }, {
                     isItemSelected: observable()
                 }],
-                s = selectable(items, {
+                s = selectableArray(items, {
                     isSelectedPath: 'isItemSelected'
                 }),
                 onSelectedItem = jasmine.createSpy();
@@ -105,7 +105,7 @@ define([
                 }, {
                     isSelected: true
                 }];
-            expect(function () { selectable(items); }).toThrow();
+            expect(function () { selectableArray(items); }).toThrow();
         });
 
         it('when isSelectedPath specifies non-existant property throws an exception', function () {
@@ -114,7 +114,7 @@ define([
                 }, {
                     isItemSelected: true
                 }];
-            expect(function () { selectable(items, { isSelectedPath: 'foobar' }); }).toThrow();
+            expect(function () { selectableArray(items, { isSelectedPath: 'foobar' }); }).toThrow();
         });
     });
 });
