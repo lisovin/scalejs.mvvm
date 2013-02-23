@@ -1,6 +1,6 @@
 
 /*global define,window */
-define('scalejs',['es5-shim'], function () {
+define('scalejs',['es5-shim', 'json2'], function () {
     
 
     var windowType = typeof (window);

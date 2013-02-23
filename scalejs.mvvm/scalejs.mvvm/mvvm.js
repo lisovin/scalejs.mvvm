@@ -5,13 +5,15 @@ define([
     'knockout.mapping',
     'scalejs!core',
     './classBindingProvider',
-    './htmlTemplateSource'
+    './htmlTemplateSource',
+    './selectable'
 ], function (
     ko,
     mapping,
     core,
     createClassBindingProvider,
-    htmlTemplateSource
+    htmlTemplateSource,
+    selectable
 ) {
     'use strict';
 
@@ -99,6 +101,7 @@ define([
                 toJson: toJson,
                 toViewModel: toViewModel,
                 renderable: curry(renderable),
+                selectable: selectable,
                 root: root
             }
         },

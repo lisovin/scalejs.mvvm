@@ -15,6 +15,7 @@
     <Content Include="scalejs.bindings\render.js" />
     <Content Include="scalejs.mvvm.js" />
     <Content Include="scalejs.mvvm\classBindingProvider.js" />
+    <Content Include="scalejs.mvvm\selectable.js" />
     <Content Include="scalejs.mvvm\mvvm.js" />
     <Content Include="scalejs.mvvm\htmlTemplateSource.js" />
     <Content Include="Scripts\es5-shim.js" />

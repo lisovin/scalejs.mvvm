@@ -18,20 +18,18 @@
     <Content Include="Scripts\es5-shim.min.js" />
     <Content Include="Scripts\jasmine-html.js" />
     <Content Include="Scripts\jasmine.js" />
+    <Content Include="Scripts\json2.js" />
+    <Content Include="Scripts\json2.min.js" />
     <Content Include="Scripts\knockout-2.2.1.debug.js" />
     <Content Include="Scripts\knockout-2.2.1.js" />
-    <Content Include="Scripts\knockout-classBindingProvider.js" />
-    <Content Include="Scripts\knockout-classBindingProvider.min.js" />
     <Content Include="Scripts\knockout.mapping-latest.debug.js" />
     <Content Include="Scripts\knockout.mapping-latest.js" />
     <Content Include="Scripts\require.js" />
-    <Content Include="Scripts\scalejs-0.2.6.js" />
-    <Content Include="Scripts\scalejs-0.2.6.min.js" />
-    <Content Include="Scripts\scalejs.mvvm-0.2.2.js" />
-    <Content Include="Scripts\scalejs.mvvm-0.2.2.min.js" />
-    <Content Include="Scripts\text.js" />
     <Content Include="index.test.html" />
+    <Content Include="Scripts\scalejs-0.2.7.1.js" />
+    <Content Include="Scripts\scalejs-0.2.7.1.min.js" />
     <Content Include="test\all.tests.js" />
+    <Content Include="test\selectable.test.js" />
     <Content Include="test\scalejs.mvvm.test.js" />
   </ItemGroup>
   <ItemGroup>
