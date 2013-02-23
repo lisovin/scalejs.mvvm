@@ -1,4 +1,4 @@
-﻿/*global define,describe,expect,it*/
+﻿/*global define,describe,expect,it,jasmine,waits*/
 /*jslint sloppy: true*/
 /// <reference path="../Scripts/jasmine.js"/>
 define([
@@ -38,7 +38,7 @@ define([
 
         it('when an item\'s isSelected is set to true selectedItem becomes the item', function () {
             var items = [{
-                    isItemSelected: observable()            
+                    isItemSelected: observable()
                 }, {
                     isItemSelected: observable()
                 }],
@@ -58,7 +58,7 @@ define([
 
         it('when selected item\'s isSelected is set to false selectedItem becomes `undefined`', function () {
             var items = [{
-                    isItemSelected: observable()            
+                    isItemSelected: observable()
                 }, {
                     isItemSelected: observable()
                 }],
@@ -79,7 +79,7 @@ define([
 
         it('when another item\'s isSelected is set to true selectedItem\'s isSelected becomes false', function () {
             var items = [{
-                    isItemSelected: observable()            
+                    isItemSelected: observable()
                 }, {
                     isItemSelected: observable()
                 }],
@@ -99,9 +99,56 @@ define([
             expect(items[0].isItemSelected()).toBeFalsy();
         });
 
+        it('when selectedItem is set to undefined all items isSelected is false', function () {
+            var items = [{
+                    isItemSelected: observable()
+                }, {
+                    isItemSelected: observable()
+                }],
+                s = selectableArray(items, {
+                    isSelectedPath: 'isItemSelected'
+                });
+
+            items[0].isItemSelected(true);
+            expect(s.selectedItem()).toEqual(items[0]);
+
+            s.selectedItem(undefined);
+            expect(items[0].isItemSelected()).toBeFalsy();
+            expect(items[1].isItemSelected()).toBeFalsy();
+        });
+
+        it('when selectionPolicy is `deselect` selected item becomes deselected', function () {
+            var items = [{
+                    isItemSelected: observable()
+                }, {
+                    isItemSelected: observable()
+                }],
+                s = selectableArray(items, {
+                    isSelectedPath: 'isItemSelected',
+                    selectionPolicy: 'deselect'
+                }),
+                onSelectedItem = jasmine.createSpy('onSelectedItem'),
+                onIsSelected = jasmine.createSpy('onIsSelected');
+
+            items[0].isItemSelected.subscribe(onIsSelected);
+            s.selectedItem.subscribe(onSelectedItem);
+
+            items[0].isItemSelected(true);
+
+            expect(onSelectedItem).toHaveBeenCalledWith(items[0]);
+            expect(onIsSelected).toHaveBeenCalledWith(true);
+
+            waits(50);
+
+            runs(function () {
+                expect(s.selectedItem()).not.toBeDefined();
+                expect(items[0].isItemSelected()).toBeFalsy();
+            });
+        });
+
         it('when isSelected is not observable throws an exception', function () {
             var items = [{
-                    isSelected: false            
+                    isSelected: false
                 }, {
                     isSelected: true
                 }];
@@ -110,7 +157,7 @@ define([
 
         it('when isSelectedPath specifies non-existant property throws an exception', function () {
             var items = [{
-                    isItemSelected: false            
+                    isItemSelected: false
                 }, {
                     isItemSelected: true
                 }];
