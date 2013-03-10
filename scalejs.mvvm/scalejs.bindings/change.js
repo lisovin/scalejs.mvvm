@@ -22,16 +22,26 @@ define([
             properties = unwrap(value),
             property,
             handler,
-            currentValue,
+            //currentValue,
             changeHandler;
 
-        function bindPropertyChangeHandler(h) {
+        function bindPropertyChangeHandler(h, currentValue) {
             return function (newValue) {
                 if (newValue !== currentValue) {
                     currentValue = newValue;
                     h.call(viewModel, newValue, element);
                 }
             };
+        }
+
+        function subscribeChangeHandler(property, changeHandler) {
+            ko.computed({
+                read: function () {
+                    var value = unwrap(viewModel[property]);
+                    changeHandler(value);
+                },
+                disposeWhenNodeIsRemoved: element
+            });
         }
 
         for (property in properties) {
@@ -41,13 +51,13 @@ define([
                     handler.initial.apply(viewModel, [unwrap(viewModel[property]), element]);
                 }
                 if (is(handler.update, 'function')) {
-                    changeHandler = bindPropertyChangeHandler(handler.update);
+                    changeHandler = bindPropertyChangeHandler(handler.update, unwrap(viewModel[property]));
                 }
                 if (is(handler, 'function')) {
-                    changeHandler = bindPropertyChangeHandler(handler);
+                    changeHandler = bindPropertyChangeHandler(handler, unwrap(viewModel[property]));
                 }
                 if (changeHandler) {
-                    viewModel[property].subscribe(changeHandler);
+                    subscribeChangeHandler(property, changeHandler);
                 }
             }
         }

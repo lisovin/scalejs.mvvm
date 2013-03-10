@@ -65,7 +65,10 @@ define([
     }
 
     function renderable(templateId, viewmodel) {
-        return merge(viewmodel, {template: templateId});
+        return {
+            data: viewmodel,
+            template: templateId
+        };
     }
 
     function init() {
@@ -75,12 +78,12 @@ define([
         registerBindings({
             'scalejs-shell': function (context) {
                 return {
-                    render: context.$data
+                    render: context.$data.root
                 };
             }
         });
 
-        ko.applyBindings(root);
+        ko.applyBindings({ root: root });
     }
 
     return {
@@ -88,7 +91,9 @@ define([
             mvvm: {
                 toJson: toJson,
                 registerBindings: registerBindings,
-                registerTemplates: registerTemplates
+                registerTemplates: registerTemplates,
+                renderable: curry(renderable),
+                selectableArray: selectableArray
             }
         },
         sandbox: {
