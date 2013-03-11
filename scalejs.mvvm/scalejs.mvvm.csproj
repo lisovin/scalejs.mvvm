@@ -12,6 +12,7 @@
     <Content Include="config.js" />
     <Content Include="Properties\build.rjs" />
     <Content Include="scalejs.bindings\change.js" />
+    <Content Include="scalejs.bindings\render.OLD.js" />
     <Content Include="scalejs.bindings\render.js" />
     <Content Include="scalejs.mvvm.js" />
     <Content Include="scalejs.mvvm\classBindingProvider.js" />
@@ -27,6 +28,7 @@
     <Content Include="Scripts\scalejs-0.2.6.js" />
     <Content Include="Scripts\scalejs-0.2.6.min.js" />
     <Content Include="Scripts\text.js" />
+    <Content Include="Scripts\_references.js" />
     <Content Include="tools\install.ps1" />
     <Content Include="tools\uninstall.ps1" />
   </ItemGroup>

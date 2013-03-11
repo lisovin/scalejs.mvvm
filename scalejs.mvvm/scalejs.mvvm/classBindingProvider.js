@@ -17,7 +17,7 @@ define(['knockout'], function (ko) {
             virtualAttribute;
 
         //returns a binding class, given the class name and the bindings object
-        function defaultBindingRouter(className, bindings) {
+        function defaultBindingRouter(className) {
             var classPath, bindingObject;
 
             //if the class name matches a property directly, then return it
@@ -84,7 +84,7 @@ define(['knockout'], function (ko) {
                     .split(' ');
                 //evaluate each class, build a single object to return
                 classes.forEach(function (cp) {
-                    bindingAccessor = bindingRouter(cp, bindings);
+                    bindingAccessor = bindingRouter(cp);
                     if (bindingAccessor) {
                         binding = typeof bindingAccessor === "function"
                             ? bindingAccessor.call(bindingContext.$data, bindingContext, classes)
@@ -132,7 +132,8 @@ define(['knockout'], function (ko) {
         return {
             registerBindings: registerBindings,
             getBindings: getBindings,
-            nodeHasBindings: nodeHasBindings
+            nodeHasBindings: nodeHasBindings,
+            bindingRouter: bindingRouter
         };
     };
 });

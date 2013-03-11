@@ -19,7 +19,8 @@ define([
 
     var merge = core.object.merge,
         toArray = core.array.toArray,
-        curry = core.functional.curry,
+        is = core.type.is,
+        //curry = core.functional.curry,
         classBindingProvider = createClassBindingProvider({
             log: core.log.warn,
             fallback: true
@@ -64,11 +65,19 @@ define([
         toArray(arguments).forEach(htmlTemplateSource.registerTemplates);
     }
 
-    function renderable(templateId, viewmodel) {
-        return {
-            data: viewmodel,
-            template: templateId
-        };
+    function renderable(dataClassOrBinding, optionalViewModel) {
+        if (is(dataClassOrBinding, 'string')) {
+            return {
+                dataClass: dataClassOrBinding,
+                viewmodel: optionalViewModel
+            };
+        }
+
+        if (is(dataClassOrBinding, 'function')) {
+            return dataClassOrBinding.bind(optionalViewModel);
+        }
+
+        return dataClassOrBinding;
     }
 
     function init() {
@@ -92,7 +101,7 @@ define([
                 toJson: toJson,
                 registerBindings: registerBindings,
                 registerTemplates: registerTemplates,
-                renderable: curry(renderable),
+                renderable: renderable,
                 selectableArray: selectableArray
             }
         },
@@ -105,7 +114,7 @@ define([
                 registerTemplates: registerTemplates,
                 toJson: toJson,
                 toViewModel: toViewModel,
-                renderable: curry(renderable),
+                renderable: renderable,
                 selectableArray: selectableArray,
                 root: root
             }

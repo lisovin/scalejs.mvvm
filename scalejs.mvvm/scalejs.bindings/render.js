@@ -1,64 +1,18 @@
 /*global define*/
+/// <reference path="../Scripts/_references.js" />
 define([
-    'knockout',
-    'scalejs!core'
+    'scalejs!core',
+    'knockout'
 ], function (
-    ko,
-    core
+    core,
+    ko
 ) {
+    /// <param name="ko" value="window.ko" />
     'use strict';
 
     var is = core.type.is,
-        has = core.object.has,
         unwrap = ko.utils.unwrapObservable;
 
-
-    function wrapValueAccessor(valueAccessor) {
-        return function () {
-            var value = unwrap(valueAccessor()),
-                data;
-
-            /*jslint unparam:true*/
-            function templateName(item, ctx) {
-                var index = ctx.$index(),
-                    el = value[index];
-
-                return el.template;
-            }
-            /*jslint unparam:false*/
-
-            if (is(value, 'array')) {
-                data = value.map(function (item) {
-                    return item.data;
-                });
-
-                return {
-                    name: templateName,
-                    foreach: data
-                };
-            }
-
-            if (is(value, 'string')) {
-                return {
-                    text: value
-                };
-            }
-
-            if (has(value, 'template')) {
-                return {
-                    name: value.template,
-                    data: value.data
-                };
-            }
-
-            // trick: since value.data is undefined, foreach won't actually call templateName
-            // but knockout is happy since `name` is there
-            return {
-                name: templateName,
-                foreach: undefined
-            };
-        };
-    }
 
     function init() {
         return { 'controlsDescendantBindings' : true };
@@ -67,15 +21,39 @@ define([
     /*jslint unparam: true*/
     function update(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
         var value = unwrap(valueAccessor()),
+            bindingAccessor,
+            binding,
             result;
 
-        result = ko.bindingHandlers.template.update(
-            element,
-            wrapValueAccessor(valueAccessor),
-            allBindingsAccessor,
-            viewModel,
-            bindingContext
-        );
+        if (!value) {
+            return;
+        }
+
+        if (is(value.dataClass, 'string')) {
+            // if dataClass is specified then get the binding from the bindingRouter
+            bindingAccessor = ko.bindingProvider.instance.bindingRouter(value.dataClass);
+            if (!bindingAccessor) {
+                throw new Error('Don\'t know how to render binding "' + value.dataClass +
+                                '" - no such binding registered. ' +
+                                'Either register the bindng or correct its name.');
+            }
+
+            if (bindingAccessor) {
+                binding = is(bindingAccessor, 'function')
+                        ? bindingAccessor.call(value.viewmodel || viewModel, bindingContext)
+                        : bindingAccessor;
+            }
+
+        } else {
+            // otherwise whole object is the binding
+            binding = is(value, 'function') ? value.call(viewModel, bindingContext) : value;
+        }
+
+        result = ko.applyBindingsToNode(element, binding);
+
+        if (is(binding, 'afterRender', 'function')) {
+            binding.afterRender(element);
+        }
 
         if (is(value, 'afterRender', 'function')) {
             value.afterRender(element);
