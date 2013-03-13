@@ -6,14 +6,16 @@ define([
     'scalejs!core',
     './classBindingProvider',
     './htmlTemplateSource',
-    './selectableArray'
+    './selectableArray',
+    './ko.utils'
 ], function (
     ko,
     mapping,
     core,
     createClassBindingProvider,
     htmlTemplateSource,
-    selectableArray
+    selectableArray,
+    koUtils
 ) {
     'use strict';
 
@@ -102,7 +104,10 @@ define([
                 registerBindings: registerBindings,
                 registerTemplates: registerTemplates,
                 renderable: renderable,
-                selectableArray: selectableArray
+                selectableArray: selectableArray,
+                ko: {
+                    utils: koUtils
+                }
             }
         },
         sandbox: {

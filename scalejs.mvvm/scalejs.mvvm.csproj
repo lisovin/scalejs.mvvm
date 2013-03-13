@@ -12,8 +12,9 @@
     <Content Include="config.js" />
     <Content Include="Properties\build.rjs" />
     <Content Include="scalejs.bindings\change.js" />
-    <Content Include="scalejs.bindings\render.OLD.js" />
+    <Content Include="scalejs.mvvm\ko.utils.js" />
     <Content Include="scalejs.bindings\render.js" />
+    <Content Include="scalejs.bindings\transitionable.js" />
     <Content Include="scalejs.mvvm.js" />
     <Content Include="scalejs.mvvm\classBindingProvider.js" />
     <Content Include="scalejs.mvvm\selectableArray.js" />
