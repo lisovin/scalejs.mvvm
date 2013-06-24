@@ -22,7 +22,6 @@ define([
     var merge = core.object.merge,
         toArray = core.array.toArray,
         is = core.type.is,
-        //curry = core.functional.curry,
         classBindingProvider = createClassBindingProvider({
             log: core.log.warn,
             fallback: true

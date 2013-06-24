@@ -15,9 +15,8 @@
 
     var array = core.array,
         merge = core.object.merge,
-        builder = core.state.builder.builder({ logStatesEnteredAndExited: true }),
-        statechart = builder.statechart,
-        state = builder.state,
+        statechart = core.state.builder.builder({ logStatesEnteredAndExited: false }),
+        state = core.state.builder.state,
         isObservable = ko.isObservable,
         unwrap = ko.utils.unwrapObservable,
         //observable = ko.observable,

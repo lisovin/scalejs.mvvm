@@ -100,7 +100,8 @@ define(['knockout'], function (ko) {
             for (bindingName in result) {
                 if (result.hasOwnProperty(bindingName) &&
                         bindingName !== "_ko_property_writers" &&
-                            !ko.bindingHandlers[bindingName]) {
+                            bindingName !== 'valueUpdate' &&
+                                !ko.bindingHandlers[bindingName]) {
                     if (options.log) {
                         if (binding) {
                             options.log('Unknown binding handler "' + bindingName + '" found in',
