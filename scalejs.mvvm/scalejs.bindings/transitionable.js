@@ -1,6 +1,7 @@
 /// <reference path="../scripts/_references.js" />
 /*global console,define,setTimeout*/
-/*jslint unparam: true*/define([
+/*jslint unparam: true*/
+define([
     'scalejs!core',
     'knockout',
     '../scalejs.mvvm/ko.utils',
@@ -152,7 +153,13 @@
         };
     }
 
-    function init(        element,        valueAccessor,        allBindingsAccessor,        viewModel,        bindingContext    ) {
+    function init(
+        element,
+        valueAccessor,
+        allBindingsAccessor,
+        viewModel,
+        bindingContext
+    ) {
         return { 'controlsDescendantBindings' : true };
     }
 
