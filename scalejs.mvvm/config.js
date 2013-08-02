@@ -5,6 +5,7 @@ var require = {
         "knockout":  "empty:",
         "knockout-classBindingProvider":  "empty:",
         "knockout.mapping":  "empty:",
-        "scalejs.statechart-scion": "empty:"
+        "scalejs.statechart-scion": "empty:",
+        "scalejs.functional": "empty:"
     }
 };

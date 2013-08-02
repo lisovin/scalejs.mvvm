@@ -81,6 +81,28 @@ define([
         return dataClassOrBinding;
     }
 
+    function dataBinding(name, data) {
+        var binding = {};
+
+        binding[name] = data;
+
+        return binding;
+    }
+
+    function template(name, data) {
+        return dataBinding('template', {
+            name: name,
+            data: data
+        });
+    }
+
+    function dataClass(name, data) {
+        return {
+            dataClass: name,
+            viewmodel: data
+        };
+    }
+
     function init() {
         var body = document.getElementsByTagName('body')[0];
 
@@ -103,6 +125,9 @@ define([
                 registerBindings: registerBindings,
                 registerTemplates: registerTemplates,
                 renderable: renderable,
+                dataClass: dataClass,
+                template: template,
+                dataBinding: dataBinding,
                 selectableArray: selectableArray,
                 ko: {
                     utils: koUtils
@@ -119,6 +144,9 @@ define([
                 toJson: toJson,
                 toViewModel: toViewModel,
                 renderable: renderable,
+                dataClass: dataClass,
+                template: template,
+                dataBinding: dataBinding,
                 selectableArray: selectableArray,
                 root: root
             }

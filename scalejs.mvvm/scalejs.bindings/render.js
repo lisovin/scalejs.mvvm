@@ -2,7 +2,8 @@
 /// <reference path="../Scripts/_references.js" />
 define([
     'scalejs!core',
-    'knockout'
+    'knockout',
+    'scalejs.functional'
 ], function (
     core,
     ko
@@ -11,7 +12,13 @@ define([
     'use strict';
 
     var is = core.type.is,
-        unwrap = ko.utils.unwrapObservable;
+        has = core.object.has,
+        unwrap = ko.utils.unwrapObservable,
+        complete = core.functional.builders.complete,
+        $DO = core.functional.builder.$DO,
+        oldElement,
+        oldBinding,
+        context;
 
 
     function init() {
@@ -21,6 +28,8 @@ define([
     /*jslint unparam: true*/
     function update(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
         var value = unwrap(valueAccessor()),
+            inTransition,
+            outTransition,
             bindingAccessor,
             binding,
             result;
@@ -49,7 +58,35 @@ define([
             binding = is(value, 'function') ? value.call(viewModel, bindingContext) : value;
         }
 
-        result = ko.applyBindingsToNode(element, binding);
+        if (has(oldBinding)) {
+            outTransition = complete.apply(null,
+                oldBinding.transitions.outTransitions.map(function (t) { return $DO(t); }));
+            context = {
+                getElement: function () {
+                    return oldElement;
+                }
+            };
+
+            outTransition.call(context, function () {
+                result = ko.applyBindingsToNode(element, binding);
+            });
+        } else {
+            result = ko.applyBindingsToNode(element, binding);
+        }
+
+        if (has(binding, 'transitions')) {
+            inTransition = complete.apply(null, binding.transitions.inTransitions.map(function (t) { return $DO(t); }));
+            context = {
+                getElement: function () {
+                    return element;
+                }
+            };
+
+            inTransition.call(context, function () {
+                oldBinding = binding;
+                oldElement = element;
+            });
+        }
 
         if (is(binding, 'afterRender', 'function')) {
             binding.afterRender(element);

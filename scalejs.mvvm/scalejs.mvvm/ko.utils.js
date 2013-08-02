@@ -1,13 +1,15 @@
 /*global define*/
 define([
+    'scalejs!core',
     'knockout'
 ], function (
+    core,
     ko
 ) {
     'use strict';
 
     function cloneNodes(nodesArray, shouldCleanNodes) {
-        return nodesArray.map(function (node) {
+        return core.array.toArray(nodesArray).map(function (node) {
             var clonedNode = node.cloneNode(true);
             return shouldCleanNodes ? ko.cleanNode(clonedNode) : clonedNode;
         });
