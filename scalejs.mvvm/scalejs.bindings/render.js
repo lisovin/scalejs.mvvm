@@ -58,7 +58,7 @@ define([
             binding = is(value, 'function') ? value.call(viewModel, bindingContext) : value;
         }
 
-        if (has(oldBinding)) {
+        if (has(oldBinding) && has(oldBinding.transitions, 'outTransitions')) {
             outTransition = complete.apply(null,
                 oldBinding.transitions.outTransitions.map(function (t) { return $DO(t); }));
             context = {
@@ -68,24 +68,30 @@ define([
             };
 
             outTransition.call(context, function () {
-                result = ko.applyBindingsToNode(element, binding);
+                result = ko.applyBindingsToNode(element, binding, viewModel);
             });
         } else {
-            result = ko.applyBindingsToNode(element, binding);
+            result = ko.applyBindingsToNode(element, binding, viewModel);
         }
 
         if (has(binding, 'transitions')) {
-            inTransition = complete.apply(null, binding.transitions.inTransitions.map(function (t) { return $DO(t); }));
-            context = {
-                getElement: function () {
-                    return element;
-                }
-            };
+            if (has(binding.transitions, 'inTransitions')) {
+                inTransition = complete.apply(null, binding.transitions.inTransitions.map(function (t) { return $DO(t); }));
+                context = {
+                    getElement: function () {
+                        return element;
+                    }
+                };
 
-            inTransition.call(context, function () {
-                oldBinding = binding;
-                oldElement = element;
-            });
+                setTimeout(function () {
+                    inTransition.call(context);
+                }, 0);
+            }
+            oldBinding = binding;
+            oldElement = element;
+        } else {
+            oldBinding = undefined;
+            oldElement = undefined;
         }
 
         if (is(binding, 'afterRender', 'function')) {

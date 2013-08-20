@@ -7,7 +7,8 @@ define([
     './classBindingProvider',
     './htmlTemplateSource',
     './selectableArray',
-    './ko.utils'
+    './ko.utils',
+    'module'
 ], function (
     ko,
     mapping,
@@ -15,7 +16,8 @@ define([
     createClassBindingProvider,
     htmlTemplateSource,
     selectableArray,
-    koUtils
+    koUtils,
+    module
 ) {
     'use strict';
 
@@ -23,7 +25,7 @@ define([
         toArray = core.array.toArray,
         is = core.type.is,
         classBindingProvider = createClassBindingProvider({
-            log: core.log.warn,
+            log: module.config().logWarnings ? core.log.warn : undefined,
             fallback: true
         }),
         root = ko.observable();
@@ -45,6 +47,10 @@ define([
     function toJson(viewModel) {
         // Extracts underlying value from observables
         return mapping.toJSON(viewModel);
+    }
+
+    function toObject(viewModel) {
+        return JSON.parse(toJson(viewModel));
     }
 
     function registerBindings(newBindings) {
@@ -143,6 +149,7 @@ define([
                 registerTemplates: registerTemplates,
                 toJson: toJson,
                 toViewModel: toViewModel,
+                toObject: toObject,
                 renderable: renderable,
                 dataClass: dataClass,
                 template: template,
