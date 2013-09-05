@@ -1,4 +1,4 @@
-/*global define*/
+/*global define,setTimeout*/
 /// <reference path="../Scripts/_references.js" />
 define([
     'scalejs!core',
