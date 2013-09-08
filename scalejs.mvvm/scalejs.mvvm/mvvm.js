@@ -23,7 +23,6 @@ define([
 
     var merge = core.object.merge,
         toArray = core.array.toArray,
-        is = core.type.is,
         classBindingProvider = createClassBindingProvider({
             log: module.config().logWarnings ? core.log.warn : undefined,
             fallback: true
@@ -72,21 +71,6 @@ define([
         toArray(arguments).forEach(htmlTemplateSource.registerTemplates);
     }
 
-    function renderable(dataClassOrBinding, optionalViewModel) {
-        if (is(dataClassOrBinding, 'string')) {
-            return {
-                dataClass: dataClassOrBinding,
-                viewmodel: optionalViewModel
-            };
-        }
-
-        if (is(dataClassOrBinding, 'function')) {
-            return dataClassOrBinding.bind(optionalViewModel);
-        }
-
-        return dataClassOrBinding;
-    }
-
     function dataBinding(name, data) {
         var binding = {};
 
@@ -130,7 +114,6 @@ define([
                 toJson: toJson,
                 registerBindings: registerBindings,
                 registerTemplates: registerTemplates,
-                renderable: renderable,
                 dataClass: dataClass,
                 template: template,
                 dataBinding: dataBinding,
@@ -150,7 +133,6 @@ define([
                 toJson: toJson,
                 toViewModel: toViewModel,
                 toObject: toObject,
-                renderable: renderable,
                 dataClass: dataClass,
                 template: template,
                 dataBinding: dataBinding,

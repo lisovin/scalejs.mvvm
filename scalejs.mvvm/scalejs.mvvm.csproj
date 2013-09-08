@@ -20,16 +20,16 @@
     <Content Include="scalejs.mvvm\selectableArray.js" />
     <Content Include="scalejs.mvvm\mvvm.js" />
     <Content Include="scalejs.mvvm\htmlTemplateSource.js" />
-    <Content Include="Scripts\es5-shim.js" />
-    <Content Include="Scripts\es5-shim.min.js" />
     <Content Include="Scripts\knockout-2.3.0.debug.js" />
     <Content Include="Scripts\knockout-2.3.0.js" />
     <Content Include="Scripts\knockout.mapping-latest.debug.js" />
     <Content Include="Scripts\knockout.mapping-latest.js" />
-    <Content Include="Scripts\scalejs-0.2.6.js" />
-    <Content Include="Scripts\scalejs-0.2.6.min.js" />
+    <Content Include="Scripts\r.js" />
+    <Content Include="Scripts\require.js" />
+    <Content Include="Scripts\scalejs-0.3.0.0.js" />
+    <Content Include="Scripts\scalejs-0.3.0.0.min.js" />
     <Content Include="Scripts\text.js" />
-    <Content Include="Scripts\_references.js" />
+    <Content Include="Scripts\_scalejs.intellisense.js" />
     <Content Include="tools\install.ps1" />
     <Content Include="tools\uninstall.ps1" />
   </ItemGroup>

@@ -41,6 +41,10 @@
   <PropertyGroup>
     <ScalejsProjectType>Test</ScalejsProjectType>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <OutputPath>bin\Release\</OutputPath>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <Import Project="$(SolutionDir)\.scalejs\Scalejs.targets" />
 </Project>

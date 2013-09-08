@@ -1,29 +1,58 @@
 
-/*global define,window */
-define('scalejs',['es5-shim'], function () {
+/*global define,window,requirejs */
+define('scalejs',[],function () {
     
-
-    var windowType = typeof (window);
-
-    // IE weirdness. 
-    if (windowType !== 'undefined' && window.console === 'undefined') {
-        window.console = window.Console;
-    }
+    var extensionNames;
 
     return {
         load: function (name, req, load, config) {
-            var extensionNames = config.scalejs ? config.scalejs.extensions || [] : [],
-                moduleName = 'scalejs/' + name;
-
-            req([moduleName], function (loadedModule) {
-                if (moduleName === 'scalejs/application') {
+            if (name === 'extensions') {
+                if (config.scalejs && config.scalejs.extensions) {
+                    extensionNames = config.scalejs.extensions;
                     req(extensionNames, function () {
-                        load(loadedModule);
+                        load(Array.prototype.slice(arguments));
                     });
                 } else {
-                    load(loadedModule);
+                    req(['scalejs/extensions'], function () {
+                        load(Array.prototype.slice(arguments));
+                    }, function () {
+                        // No extensions defined, which is strange but might be ok.
+                        load([]);
+                    });
                 }
+                return;
+            }
+
+            if (name === 'application') {
+                req(['scalejs!extensions'], function () {
+                    req(['scalejs/application'], function (application) {
+                        load(application);
+                    });
+                });
+                return;
+            }
+
+            if (name.indexOf('sandbox') === 0) {
+                req(['scalejs!core', 'scalejs!extensions'], function (core) {
+                    if (config.isBuild) {
+                        load();
+                    } else {
+                        var sandbox = core.buildSandbox(name);
+                        load(sandbox);
+                    }
+                });
+                return;
+            }
+
+            req(['scalejs/' + name], function (loadedModule) {
+                load(loadedModule);
             });
+        },
+
+        write: function (pluginName, moduleName, write) {
+            if (pluginName === 'scalejs' && moduleName === 'application') {
+                write('define("scalejs/extensions", ' + JSON.stringify(extensionNames) + ', function () { return Array.prototype.slice(arguments); })');
+            }
         }
     };
 });
@@ -32,7 +61,27 @@ define('scalejs',['es5-shim'], function () {
 define('scalejs/base.type',[],function () {
     
     function typeOf(obj) {
-        return ({}).toString.call(obj).match(/\s([a-z|A-Z]+)/)[1].toLowerCase();
+        if (obj === undefined) {
+            return 'undefined';
+        }
+
+        if (obj === null) {
+            return 'null';
+        }
+
+        var t = ({}).toString.call(obj).match(/\s([a-z|A-Z]+)/)[1].toLowerCase(),
+            m;
+
+        if (t !== 'object') {
+            return t;
+        }
+
+        m = obj.constructor.toString().match(/^function\s*([$A-Z_][0-9A-Z_$]*)/i);
+        if (m === null) {
+            return 'object';
+        }
+
+        return m[1];
     }
 
     function is(value) {
@@ -382,7 +431,7 @@ define('scalejs/base.array',[
         /// <returns type="">New array containing the specified items.</returns>
         first = valueOrDefault(first, 0);
         count = valueOrDefault(count, array.length);
-        return array.slice(first, count);
+        return Array.prototype.slice.call(array, first, count);
     }
 
     function find(array, f, context) {
@@ -397,7 +446,17 @@ define('scalejs/base.array',[
     }
 
     function toArray(list, start, end) {
-        return Array.prototype.slice.call(list, start, end);
+        /*ignore jslint start*/
+        var array = [],
+            i,
+            result;
+
+        for (i = list.length; i--; array[i] = list[i]) {}
+        
+        result = copy(array, start, end);
+
+        return result;
+        /*ignore jslint end*/
     }
 
     return {
@@ -410,204 +469,52 @@ define('scalejs/base.array',[
     };
 });
 
-/*global define,window,document*/
+/*global define,window,document,console*/
 define('scalejs/base.log',[
-    './base.object'
 ], function (
-    object
 ) {
     
 
-    var has = object.has;
+    var logMethods = ['log', 'info', 'warn', 'error'],
+        self = {};
 
-    function formatException(ex) {
-        var stack = has(ex, 'stack') ? String(ex.stack) : '',
-            message = has(ex, 'message') ? ex.message : '';
+    // Workaround for IE8 and IE9 - in these browsers console.log exists but it's not a real JS function.
+    // See http://stackoverflow.com/a/5539378/201958 for more details
+
+    if (window.console !== undefined) {
+        if (typeof console.log === "object") {
+            logMethods.forEach(function (method) {
+                self[method] = this.bind(console[method], console);
+            }, Function.prototype.call);
+        } else {
+            logMethods.forEach(function (method) {
+                if (console[method]) {
+                    self[method] = console[method].bind(console);
+                } else {
+                    self[method] = console.log.bind(console);
+                }
+            });
+        }
+
+        if (typeof console.debug === 'function') {
+            self.debug = console.debug.bind(console);
+        } else {
+            self.debug = self.info;
+        }
+    } else {
+        logMethods.forEach(function (method) {
+            self[method] = function () {};
+        });
+        logMethods.debug = function () {};
+    }
+
+    self.formatException = function (ex) {
+        var stack = ex.stack ? String(ex.stack) : '',
+            message = ex.message || '';
         return 'Error: ' + message + '\nStack: ' + stack;
-    }
-
-    function info() {
-        if (has(window, 'console', 'info')) {
-            window.console.info.apply(window.console, arguments);
-        }
-    }
-
-    function warn() {
-        if (has(window, 'console', 'warn')) {
-            window.console.warn.apply(window.console, arguments);
-            return;
-        }
-
-        info(arguments);
-    }
-
-    function error() {
-        if (has(window, 'console', 'error')) {
-            window.console.error.apply(window.console, arguments);
-            return;
-        }
-
-        info(arguments);
-    }
-
-    function debug() {
-        if (has(window, 'console', 'debug')) {
-            window.console.debug.apply(window.console, arguments);
-            return;
-        }
-
-        info(arguments);
-    }
-
-    return {
-        info: info,
-        warn: warn,
-        debug: debug,
-        error: error,
-        formatException: formatException
     };
-});
 
-/*global define,console,document*/
-/*jslint nomen: true*/
-/**
- * Based on Oliver Steele "Functional Javascript" (http://osteele.com/sources/javascript/functional/)
- **/
-define('scalejs/base.functional',[], function (
-) {
-    
-
-    var _ = {};
-
-    function compose() {
-        /// <summary>
-        /// Returns a function that applies the last argument of this
-        /// function to its input, and the penultimate argument to the
-        /// result of the application, and so on.
-        /// == compose(f1, f2, f3..., fn)(args) == f1(f2(f3(...(fn(args...)))))
-        /// :: (a2 -> a1) (a3 -> a2)... (a... -> a_{n}) -> a... -> a1
-        /// >> compose('1+', '2*')(2) -> 5
-        /// </summary>
-        var fns = Array.prototype.slice.call(arguments, 0).reverse();
-
-        return function () {
-            var args = fns.reduce(function (args, fn) {
-                return [fn.apply(undefined, args)];
-            }, Array.prototype.slice.call(arguments));
-
-            return args[0];
-        };
-    }
-    function sequence() {
-        /// <summary>
-        /// Same as `compose`, except applies the functions in argument-list order.
-        /// == sequence(f1, f2, f3..., fn)(args...) == fn(...(f3(f2(f1(args...)))))
-        /// :: (a... -> a1) (a1 -> a2) (a2 -> a3)... (a_{n-1} -> a_{n})  -> a... -> a_{n}
-        /// >> sequence('1+', '2*')(2) -> 6
-        /// </summary>
-        var fns = Array.prototype.slice.call(arguments, 0);
-
-        return function () {
-            var args = fns.reduce(function (args, fn) {
-                return [fn.apply(undefined, args)];
-            }, Array.prototype.slice.call(arguments, 0));
-
-            return args[0];
-        };
-    }
-
-    function bind(object, fn) {
-        /// <summary>
-        /// Returns a bound method on `object`, optionally currying `args`.
-        /// == f.bind(obj, args...)(args2...) == f.apply(obj, [args..., args2...])
-        /// </summary>
-        /// <param name="object"></param>
-        var args = Array.prototype.slice.call(arguments, 2);
-        return function () {
-            return fn.apply(object, args.concat(Array.prototype.slice.call(arguments, 0)));
-        };
-    }
-
-    function aritize(fn, n) {
-        /// <summary>
-        /// Invoking the function returned by this function only passes `n`
-        /// arguments to the underlying function.  If the underlying function
-        /// is not saturated, the result is a function that passes all its
-        /// arguments to the underlying function.  (That is, `aritize` only
-        /// affects its immediate caller, and not subsequent calls.)
-        /// >> '[a,b]'.lambda()(1,2) -> [1, 2]
-        /// >> '[a,b]'.lambda().aritize(1)(1,2) -> [1, undefined]
-        /// >> '+'.lambda()(1,2)(3) -> error
-        /// >> '+'.lambda().ncurry(2).aritize(1)(1,2)(3) -> 4
-        ///
-        /// `aritize` is useful to remove optional arguments from a function that
-        /// is passed to a higher-order function that supplies *different* optional
-        /// arguments.
-        ///
-        /// For example, many implementations of `map` and other collection
-        /// functions, call the function argument with both the collection element
-        /// and its position.  This is convenient when expected, but can wreak
-        /// havoc when the function argument is a curried function that expects
-        /// a single argument from `map` and the remaining arguments from when
-        /// the result of `map` is applied.
-        /// </summary>
-        /// <param name="fn"></param>
-        /// <param name="n"></param>
-        return function () {
-            return fn.apply(undefined, Array.prototype.slice.call(arguments, 0, n));
-        };
-    }
-
-    function curry(fn, n) {
-        if (arguments.length === 1) {
-            return curry(fn, fn.length);
-        }
-
-        var largs = Array.prototype.slice.call(arguments, 2);
-
-        if (largs.length >= n) {
-            return fn.apply(undefined, largs);
-        }
-
-        return function () {
-            var args = largs.concat(Array.prototype.slice.call(arguments, 0));
-            args.unshift(fn, n);
-            return curry.apply(undefined, args);
-        };
-    }
-
-    // partial itself is partial, e.g. partial(_, a, _)(f) = partial(f, a, _)
-    function partial() {
-        var args = Array.prototype.slice.call(arguments, 0),
-            subpos = args.reduce(function (blanks, arg, i) {
-                return arg === _ ? blanks.concat([i]) : blanks;
-            }, []);
-
-        if (subpos.length === 0) {
-            return args[0].apply(undefined, args.slice(1));
-        }
-
-        return function () {
-            var //specialized = args.concat(Array.prototype.slice.call(arguments, subpos.length)),
-                i;
-
-            for (i = 0; i < Math.min(subpos.length, arguments.length); i += 1) {
-                args[subpos[i]] = arguments[i];
-            }
-
-            return partial.apply(undefined, args);
-        };
-    }
-
-    return {
-        _: _,
-        compose: compose,
-        sequence: sequence,
-        bind: bind,
-        aritize: aritize,
-        curry: curry,
-        partial: partial
-    };
+    return self;
 });
 
 /*
@@ -618,14 +525,12 @@ define('scalejs/base',[
     './base.array',
     './base.log',
     './base.object',
-    './base.type',
-    './base.functional'
+    './base.type'
 ], function (
     array,
     log,
     object,
-    type,
-    functional
+    type
 ) {
     
 
@@ -633,43 +538,16 @@ define('scalejs/base',[
         type: type,
         object: object,
         array: array,
-        log: log,
-        functional: functional
+        log: log
     };
-});
-
-/*global define,document */
-define('scalejs/sandbox',[],function (
-) {
-    
-
-    function sandbox(id, core) {
-        function getId() {
-            return id;
-        }
-
-        return {
-            getId: getId,
-            object: core.object,
-            type: core.type,
-            log: core.log,
-            array: core.array,
-            functional: core.functional,
-            onApplicationStarted: core.onApplicationStarted
-        };
-    }
-
-    return sandbox;
 });
 
 /*global define */
 /// <reference path="../Scripts/es5-shim.js" />
 define('scalejs/core',[
-    './base',
-    './sandbox'
+    './base'
 ], function (
-    base,
-    createSandbox
+    base
 ) {
     
 
@@ -681,8 +559,8 @@ define('scalejs/core',[
         error = base.log.error,
         self = {},
         extensions = [],
-        applicationStartedListeners = [],
-        applicationStarted = false;
+        applicationEventListeners = [],
+        isApplicationRunning = false;
 
     function registerExtension(extension) {
         try {
@@ -697,7 +575,7 @@ define('scalejs/core',[
                 return;
             }
             // If extension has buildCore function then give it an instance of the core. 
-            if (is(extension, 'buildCore', ' function')) {
+            if (is(extension, 'buildCore', 'function')) {
                 extension.buildCore(self);
                 addOne(extensions, extension);
                 return;
@@ -725,11 +603,17 @@ define('scalejs/core',[
 
     function buildSandbox(id) {
         if (!has(id)) {
-            throw new Error('Module is is required to builder sandbox.');
+            throw new Error('Sandbox name is required to build a sandbox.');
         }
 
         // Create module instance specific sandbox 
-        var sandbox = createSandbox(id, self);
+        var sandbox = {
+            type: self.type,
+            object: self.object,
+            array: self.array,
+            log: self.log
+        };
+
 
         // Add extensions to sandbox
         extensions.forEach(function (extension) {
@@ -760,23 +644,26 @@ define('scalejs/core',[
         return sandbox;
     }
 
-    function onApplicationStarted(listener) {
-        applicationStartedListeners.push(listener);
+    function onApplicationEvent(listener) {
+        applicationEventListeners.push(listener);
     }
 
     function notifyApplicationStarted() {
-        if (applicationStarted) {
-            return;
-        }
+        if (isApplicationRunning) { return; }
 
-        applicationStarted = true;
-        applicationStartedListeners.forEach(function (listener) {
-            listener();
+        isApplicationRunning = true;
+        applicationEventListeners.forEach(function (listener) {
+            listener('started');
         });
     }
 
-    function isApplicationStarted() {
-        return applicationStarted;
+    function notifyApplicationStopped() {
+        if (!isApplicationRunning) { return; }
+
+        isApplicationRunning = false;
+        applicationEventListeners.forEach(function (listener) {
+            listener('stopped');
+        });
     }
 
     return extend(self, {
@@ -784,16 +671,17 @@ define('scalejs/core',[
         object: base.object,
         array: base.array,
         log: base.log,
-        functional: base.functional,
         buildSandbox: buildSandbox,
         notifyApplicationStarted: notifyApplicationStarted,
-        onApplicationStarted: onApplicationStarted,
-        isApplicationStarted: isApplicationStarted,
+        notifyApplicationStopped: notifyApplicationStopped,
+        onApplicationEvent: onApplicationEvent,
+        isApplicationRunning: function () { return isApplicationRunning; },
         registerExtension: registerExtension
     });
 });
 
 /*
+
  * Core Application
  *
  * The Core Application manages the life cycle of modules.
@@ -809,54 +697,58 @@ define('scalejs/application',[
 
     var addOne = core.array.addOne,
         toArray = core.array.toArray,
-        partial = core.functional.partial,
-        _ = core.functional._,
-        has = core.object.has,
+        //has = core.object.has,
         error = core.log.error,
         debug = core.log.debug,
         moduleRegistrations = [],
         moduleInstances = [];
 
     function registerModules() {
-        var moduleNames,
-            modules;
         // Dynamic module loading is no longer supported for simplicity.
         // Module is free to load any of its resources dynamically.
         // Or an extension can provide dynamic module loading capabilities as needed.
-        if (core.isApplicationStarted()) {
-            moduleNames = toArray(arguments).reduce(function (ns, m) { return ns + ',' + m; });
-            throw new Error('Can\'t register module "' + moduleNames + '" since the application is already running.',
+        if (core.isApplicationRunning()) {
+            throw new Error('Can\'t register module since the application is already running.',
                             'Dynamic module loading is not supported.');
         }
 
-        modules = toArray(arguments).filter(partial(has, _, 'getModuleId'));
-        Array.prototype.push.apply(moduleRegistrations, modules);
+        Array.prototype.push.apply(moduleRegistrations, toArray(arguments).filter(function (m) { return m; }));
     }
 
     function createModule(module) {
-        var moduleInstance;
+        var moduleInstance,
+            moduleId;
 
-        try {
-            moduleInstance = module.newInstance();
-            addOne(moduleInstances, moduleInstance);
+        if (typeof module === 'function') {
+            try {
+                moduleInstance = module();
+            } catch (ex) {
+                if (module.getId) {
+                    moduleId = module.getId();
+                } else {
+                    moduleId = module.name;
+                }
 
-            return moduleInstance;
-        } catch (ex) {
-            error('Failed to create an instance of module "' + module.getModuleId() + '".',
-                  'Application will continue running without the module. ' +
-                  'See following exception stack for more details.',
-                  ex.stack);
+                error('Failed to create an instance of module "' + moduleId + '".',
+                      'Application will continue running without the module. ' +
+                      'See following exception stack for more details.',
+                      ex.stack);
+            }
+        } else {
+            moduleInstance = module;
         }
+
+        addOne(moduleInstances, moduleInstance);
+
+        return moduleInstance;
     }
 
     function createAll() {
-        moduleRegistrations.forEach(function (registration) {
-            createModule(registration);
-        });
+        moduleRegistrations.forEach(createModule);
     }
 
     function startAll() {
-        debug("Application started.");
+        debug('Application started.');
 
         core.notifyApplicationStarted();
     }
@@ -866,50 +758,14 @@ define('scalejs/application',[
         startAll();
     }
 
-    return {
-        registerModules: registerModules,
-        run: run
-    };
-});
-
-/*
- * Core Module of Scalable JavaScript Application
- *
- * Each Module corresponds to an independent unit of functionality.
- */
-/*global define */
-define('scalejs/module',[
-    './core'
-], function (
-    core
-) {
-    
-
-    function module(moduleId, creator) {
-        function getModuleId() {
-            return moduleId;
-        }
-
-        function newInstance() {
-            var instance,
-                sandbox;
-
-            sandbox = core.buildSandbox(moduleId);
-            sandbox.getModuleId = function () { return moduleId; };
-
-            instance = creator(sandbox);
-
-            return {
-                toString: getModuleId
-            };
-        }
-
-        return {
-            getModuleId: getModuleId,
-            toString: getModuleId,
-            newInstance: newInstance
-        };
+    function exit() {
+        debug('Application exited.');
+        core.notifyApplicationStopped();
     }
 
-    return module;
+    return {
+        registerModules: registerModules,
+        run: run,
+        exit: exit
+    };
 });
