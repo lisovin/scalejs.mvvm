@@ -3,7 +3,7 @@
   <PropertyGroup>
     <ProjectGuid>{E151111B-B007-46AC-8021-D265290E6509}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <OutputPath>build</OutputPath>
+    <OutputPath>js</OutputPath>
     <JSLintSkip>\Scripts\|\test\require.js</JSLintSkip>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -29,12 +29,14 @@
     <Content Include="Scripts\scalejs-0.3.0.0.js" />
     <Content Include="Scripts\scalejs-0.3.0.0.min.js" />
     <Content Include="Scripts\text.js" />
-    <Content Include="Scripts\_scalejs.intellisense.js" />
+    <Content Include="Scripts\_references.js" />
     <Content Include="tools\install.ps1" />
     <Content Include="tools\uninstall.ps1" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\scalejs.mvvm.nuspec">
       <SubType>Designer</SubType>
     </None>

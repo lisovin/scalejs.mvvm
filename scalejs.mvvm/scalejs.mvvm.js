@@ -2,7 +2,7 @@
 define([
     'scalejs!core',
     'knockout',
-    './scalejs.mvvm/mvvm',
+    'scalejs.mvvm/mvvm',
     './scalejs.bindings/change',
     './scalejs.bindings/render'
 ], function (
