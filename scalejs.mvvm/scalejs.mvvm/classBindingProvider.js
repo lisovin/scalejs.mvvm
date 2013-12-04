@@ -34,7 +34,7 @@ define(['knockout'], function (ko) {
 
         function registerBindings(newBindings) {
             //allow bindings to be registered after instantiation
-	        ko.utils.extend(bindings, newBindings);
+            ko.utils.extend(bindings, newBindings);
         }
 
         function nodeHasBindings(node) {

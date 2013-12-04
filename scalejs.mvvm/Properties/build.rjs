@@ -1,6 +1,6 @@
 ﻿({
 	mainConfigFile: '../config.js',
-    include: 'scalejs.mvvm',
+    include: ['scalejs.mvvm'],
     exclude: [
         'scalejs!core'
     ]

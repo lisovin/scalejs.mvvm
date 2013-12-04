@@ -76,10 +76,10 @@ define([
 
             computed({
                 read: function () {
-                    var state = unwrap(transitionableState);
-                    if (state) {
+                    var st = unwrap(transitionableState);
+                    if (st) {
                         setTimeout(function () {
-                            transitionsStatechart.send(state);
+                            transitionsStatechart.send(st);
                         }, 0);
                     }
                 },

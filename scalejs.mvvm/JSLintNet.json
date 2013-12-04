@@ -1,0 +1,12 @@
+﻿{
+  "output": "Error",
+  "runOnSave": true,
+  "runOnBuild": true,
+  "cancelBuild": true,
+  "ignore": [
+    "\\Scripts\\"
+  ],
+  "options": {
+    "predef": {}
+  }
+}

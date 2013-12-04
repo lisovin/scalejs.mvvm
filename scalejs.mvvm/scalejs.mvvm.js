@@ -19,7 +19,6 @@ define([
 
     ko.virtualElements.allowedBindings.change = true;
     ko.virtualElements.allowedBindings.render = true;
-    ko.virtualElements.allowedBindings.transitionable = true;
 
     mvvm.init();
 

@@ -37,8 +37,8 @@ define([
         function subscribeChangeHandler(property, changeHandler) {
             ko.computed({
                 read: function () {
-                    var value = unwrap(viewModel[property]);
-                    changeHandler(value);
+                    var val = unwrap(viewModel[property]);
+                    changeHandler(val);
                 },
                 disposeWhenNodeIsRemoved: element
             });

@@ -35,7 +35,7 @@ define('scalejs.mvvm/classBindingProvider',['knockout'], function (ko) {
 
         function registerBindings(newBindings) {
             //allow bindings to be registered after instantiation
-	        ko.utils.extend(bindings, newBindings);
+            ko.utils.extend(bindings, newBindings);
         }
 
         function nodeHasBindings(node) {
@@ -149,64 +149,64 @@ define('scalejs.mvvm/htmlTemplateSource',[
 ) {
     
 
-	var toArray = core.array.toArray,
+    var toArray = core.array.toArray,
         has = core.object.has,
         templateEngine = new ko.nativeTemplateEngine(),
-		templates = {
+        templates = {
             data: {}
         };
 
-	function registerTemplates(templatesHtml) {
-		// iterate through all templates (e.g. children of root in templatesHtml)
-		// for every child get its templateId and templateHtml 
-		// and add it to 'templates'			
-		var div = document.createElement('div');
-		div.innerHTML = templatesHtml;
-		toArray(div.childNodes).forEach(function (childNode) {
-			if (childNode.nodeType === 1 && has(childNode, 'id')) {
-				templates[childNode.id] = childNode.innerHTML;
-			}
-		});
-	}
+    function registerTemplates(templatesHtml) {
+        // iterate through all templates (e.g. children of root in templatesHtml)
+        // for every child get its templateId and templateHtml 
+        // and add it to 'templates'            
+        var div = document.createElement('div');
+        div.innerHTML = templatesHtml;
+        toArray(div.childNodes).forEach(function (childNode) {
+            if (childNode.nodeType === 1 && has(childNode, 'id')) {
+                templates[childNode.id] = childNode.innerHTML;
+            }
+        });
+    }
 
-	function makeTemplateSource(templateId) {
-		function data(key, value) {
+    function makeTemplateSource(templateId) {
+        function data(key, value) {
             if (!has(templates.data, templateId)) {
                 templates.data[templateId] = {};
             }
 
             // if called with only key then return the associated value
-			if (arguments.length === 1) {
-				return templates.data[templateId][key];
-			}
+            if (arguments.length === 1) {
+                return templates.data[templateId][key];
+            }
 
-			// if called with key and value then store the value
-			templates.data[templateId][key] = value;
-		}
+            // if called with key and value then store the value
+            templates.data[templateId][key] = value;
+        }
 
-		function text(value) {
-			// if no value return the template content since that's what KO wants
-			if (arguments.length === 0) {
-				return templates[templateId];
-			}
+        function text(value) {
+            // if no value return the template content since that's what KO wants
+            if (arguments.length === 0) {
+                return templates[templateId];
+            }
 
             throw new Error('An attempt to override template "' + templateId + '" with content "' + value + '" ' +
                             'Template overriding is not supported.');
-		}
+        }
 
-		return {
-			data: data,
-			text: text
-		};
-	}
+        return {
+            data: data,
+            text: text
+        };
+    }
 
     templateEngine.makeTemplateSource = makeTemplateSource;
 
     ko.setTemplateEngine(templateEngine);
 
     return {
-		registerTemplates: registerTemplates
-	};
+        registerTemplates: registerTemplates
+    };
 });
 
 /*global define,document,setTimeout*/
@@ -522,8 +522,8 @@ define('scalejs.bindings/change',[
         function subscribeChangeHandler(property, changeHandler) {
             ko.computed({
                 read: function () {
-                    var value = unwrap(viewModel[property]);
-                    changeHandler(value);
+                    var val = unwrap(viewModel[property]);
+                    changeHandler(val);
                 },
                 disposeWhenNodeIsRemoved: element
             });
@@ -554,7 +554,7 @@ define('scalejs.bindings/change',[
     };
 });
 
-/*global define,setTimeout*/
+/*global define,setTimeout,window*/
 /// <reference path="../Scripts/_references.js" />
 define('scalejs.bindings/render',[
     'scalejs!core',
@@ -571,94 +571,77 @@ define('scalejs.bindings/render',[
         has = core.object.has,
         unwrap = ko.utils.unwrapObservable,
         complete = core.functional.builders.complete,
-        $DO = core.functional.builder.$DO,
-        oldElement,
-        oldBinding,
-        context;
-
+        $DO = core.functional.builder.$DO;
 
     function init() {
-        return { 'controlsDescendantBindings' : true };
+        return { 'controlsDescendantBindings': true };
     }
 
     /*jslint unparam: true*/
     function update(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
         var value = unwrap(valueAccessor()),
-            inTransition,
-            outTransition,
             bindingAccessor,
             binding,
-            result;
+            oldBinding,
+            inTransitions = [],
+            outTransitions = [],
+            context,
+            render;
 
-        if (!value) {
-            return;
-        }
-
-        if (is(value.dataClass, 'string')) {
-            // if dataClass is specified then get the binding from the bindingRouter
-            bindingAccessor = ko.bindingProvider.instance.bindingRouter(value.dataClass);
-            if (!bindingAccessor) {
-                throw new Error('Don\'t know how to render binding "' + value.dataClass +
-                                '" - no such binding registered. ' +
-                                'Either register the bindng or correct its name.');
+        function applyBindings(completed) {
+            if (binding) {
+                ko.applyBindingsToNode(element, binding, viewModel);
+            } else {
+                ko.utils.emptyDomNode(element);
             }
 
-            if (bindingAccessor) {
-                binding = is(bindingAccessor, 'function')
-                        ? bindingAccessor.call(value.viewmodel || viewModel, bindingContext)
-                        : bindingAccessor;
-            }
-
-        } else {
-            // otherwise whole object is the binding
-            binding = is(value, 'function') ? value.call(viewModel, bindingContext) : value;
+            window.requestAnimationFrame(completed);
+            //setTimeout(completed, 10);
         }
 
-        if (has(oldBinding) && has(oldBinding.transitions, 'outTransitions')) {
-            outTransition = complete.apply(null,
-                oldBinding.transitions.outTransitions.map(function (t) { return $DO(t); }));
-            context = {
-                getElement: function () {
-                    return oldElement;
+        oldBinding = ko.utils.domData.get(element, 'binding');
+
+        if (value) {
+            if (is(value.dataClass, 'string')) {
+                // if dataClass is specified then get the binding from the bindingRouter
+                bindingAccessor = ko.bindingProvider.instance.bindingRouter(value.dataClass);
+                if (!bindingAccessor) {
+                    throw new Error('Don\'t know how to render binding "' + value.dataClass +
+                                    '" - no such binding registered. ' +
+                                    'Either register the bindng or correct its name.');
                 }
-            };
 
-            outTransition.call(context, function () {
-                result = ko.applyBindingsToNode(element, binding, viewModel);
-            });
-        } else {
-            result = ko.applyBindingsToNode(element, binding, viewModel);
-        }
+                if (bindingAccessor) {
+                    binding = is(bindingAccessor, 'function')
+                            ? bindingAccessor.call(value.viewmodel || viewModel, bindingContext)
+                            : bindingAccessor;
+                }
 
-        if (has(binding, 'transitions')) {
-            if (has(binding.transitions, 'inTransitions')) {
-                inTransition = complete.apply(null, binding.transitions.inTransitions.map(function (t) { return $DO(t); }));
-                context = {
-                    getElement: function () {
-                        return element;
-                    }
-                };
-
-                setTimeout(function () {
-                    inTransition.call(context);
-                }, 0);
+            } else {
+                // otherwise whole object is the binding
+                binding = is(value, 'function') ? value.call(viewModel, bindingContext) : value;
             }
-            oldBinding = binding;
-            oldElement = element;
-        } else {
-            oldBinding = undefined;
-            oldElement = undefined;
         }
 
-        if (is(binding, 'afterRender', 'function')) {
-            binding.afterRender(element);
+        if (has(oldBinding, 'transitions', 'outTransitions')) {
+            outTransitions = oldBinding.transitions.outTransitions.map(function (t) { return $DO(t); });
         }
 
-        if (is(value, 'afterRender', 'function')) {
-            value.afterRender(element);
+        if (has(binding, 'transitions', 'inTransitions')) {
+            inTransitions = binding.transitions.inTransitions.map(function (t) { return $DO(t); });
         }
 
-        return result;
+        render = complete.apply(null, outTransitions.concat($DO(applyBindings)).concat(inTransitions));
+
+        context = {
+            getElement: function () {
+                return element;
+            }
+        };
+
+        render.call(context);
+
+        ko.utils.domData.set(element, 'binding', binding);
     }
     /*jslint unparam: false*/
 
@@ -689,7 +672,6 @@ define('scalejs.mvvm',[
 
     ko.virtualElements.allowedBindings.change = true;
     ko.virtualElements.allowedBindings.render = true;
-    ko.virtualElements.allowedBindings.transitionable = true;
 
     mvvm.init();
 

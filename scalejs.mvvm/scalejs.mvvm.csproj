@@ -17,6 +17,8 @@
     <Content Include="scalejs.bindings\transitionable.js" />
     <Content Include="scalejs.mvvm.js" />
     <Content Include="scalejs.mvvm\classBindingProvider.js" />
+    <Content Include="scalejs.mvvm.bindings.js" />
+    <Content Include="scalejs.mvvm.views.js" />
     <Content Include="scalejs.mvvm\selectableArray.js" />
     <Content Include="scalejs.mvvm\mvvm.js" />
     <Content Include="scalejs.mvvm\htmlTemplateSource.js" />
@@ -34,6 +36,7 @@
     <Content Include="tools\uninstall.ps1" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="JSLintNet.json" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
