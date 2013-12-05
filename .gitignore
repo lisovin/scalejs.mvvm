@@ -10,3 +10,5 @@
 /scalejs.mvvm/obj
 /scalejs.mvvm.test/build
 /scalejs.mvvm.test/obj
+js/
+*.suo
