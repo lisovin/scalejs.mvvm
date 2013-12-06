@@ -4,27 +4,25 @@ define([
     'knockout',
     'knockout.mapping',
     'scalejs!core',
-    './classBindingProvider',
+    'scalejs.mvvm/classBindingProvider',
     './htmlTemplateSource',
     './selectableArray',
-    './ko.utils',
-    'module'
+    './ko.utils'
 ], function (
     ko,
     mapping,
     core,
-    createClassBindingProvider,
+    ClassBindingProvider,
     htmlTemplateSource,
     selectableArray,
-    koUtils,
-    module
+    koUtils
 ) {
     'use strict';
 
     var merge = core.object.merge,
         toArray = core.array.toArray,
-        classBindingProvider = createClassBindingProvider({
-            log: module.config().logWarnings ? core.log.warn : undefined,
+        classBindingProvider = new ClassBindingProvider({}, {
+            log: core.log.warn,
             fallback: true
         }),
         root = ko.observable();
@@ -53,7 +51,7 @@ define([
     }
 
     function registerBindings() {
-        toArray(arguments).forEach(classBindingProvider.registerBindings);
+        toArray(arguments).forEach(classBindingProvider.registerBindings.bind(classBindingProvider));
     }
 
     function toViewModel(data, viewModel, mappings) {
