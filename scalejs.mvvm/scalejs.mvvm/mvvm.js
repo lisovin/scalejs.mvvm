@@ -52,8 +52,8 @@ define([
         return JSON.parse(toJson(viewModel));
     }
 
-    function registerBindings(newBindings) {
-        classBindingProvider.registerBindings(newBindings);
+    function registerBindings() {
+        toArray(arguments).forEach(classBindingProvider.registerBindings);
     }
 
     function toViewModel(data, viewModel, mappings) {

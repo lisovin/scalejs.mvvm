@@ -5,10 +5,34 @@ define(function () {
 
     return {
         load: function (name, req, onLoad, config) {
-            req([name, 'scalejs!core', 'scalejs.mvvm'], function (bindings, core) {
-                if (!config.isBuild) {
-                    core.mvvm.registerBindings(bindings);
+            var names = name.match(/([\w\-]+)/g) || [];
+
+            names = names.map(function (n) {
+                if (n.indexOf('.js', n.length - 3) > -1) {
+                    return n;
                 }
+
+                if (n.indexOf('Bindings', n.length - 'Bindings'.length) === -1) {
+                    n = n + 'Bindings';
+                }
+
+                if (n.indexOf('/') === -1) {
+                    return './bindings/' + n;
+                }
+
+                return n;
+            });
+
+            names.push('scalejs.mvvm', 'scalejs!core');
+
+            req(names, function () {
+                var core = arguments[arguments.length - 1],
+                    bindings = Array.prototype.slice.call(arguments, 0, arguments.length - 2);
+
+                if (!config.isBuild) {
+                    core.mvvm.registerBindings.apply(null, bindings);
+                }
+
                 onLoad(bindings);
             });
         }
