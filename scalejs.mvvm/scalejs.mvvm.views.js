@@ -5,7 +5,7 @@ define(function () {
 
     return {
         load: function (name, req, onLoad, config) {
-            var names = name.match(/([\w\-]+)/g) || [];
+            var names = name.match(/([^,]+)/g) || [];
 
             names = names.map(function (n) {
                 if (n.indexOf('.html', n.length - 5) === -1) {
