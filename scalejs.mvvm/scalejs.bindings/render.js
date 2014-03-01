@@ -14,7 +14,7 @@ define([
     var is = core.type.is,
         has = core.object.has,
         unwrap = ko.utils.unwrapObservable,
-        complete = core.functional.builders.complete,
+        continuation = core.functional.builders.continuation,
         $DO = core.functional.builder.$DO;
 
     function init() {
@@ -75,7 +75,7 @@ define([
             inTransitions = binding.transitions.inTransitions.map(function (t) { return $DO(t); });
         }
 
-        render = complete.apply(null, outTransitions.concat($DO(applyBindings)).concat(inTransitions));
+        render = continuation.apply(null, outTransitions.concat($DO(applyBindings)).concat(inTransitions));
 
         context = {
             getElement: function () {
