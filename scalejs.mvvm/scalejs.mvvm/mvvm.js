@@ -92,9 +92,13 @@ define([
     }
 
     function init() {
-        var body = document.getElementsByTagName('body')[0];
+        var body = document.getElementsByTagName('body')[0],
+            opening_comment = document.createComment(' ko class: scalejs-shell '),
+            closing_comment = document.createComment(' /ko ');
 
-        body.innerHTML = '<!-- ko class: scalejs-shell --><!-- /ko -->';
+        body.appendChild(opening_comment);
+        body.appendChild(closing_comment);
+
         registerBindings({
             'scalejs-shell': function (context) {
                 return {

@@ -1,4 +1,4 @@
-/*global define,document*/
+/*global define,document,WinJS*/
 define([
     'knockout',
     'scalejs!core'
@@ -20,7 +20,13 @@ define([
         // for every child get its templateId and templateHtml 
         // and add it to 'templates'            
         var div = document.createElement('div');
-        div.innerHTML = templatesHtml;
+
+        if (typeof WinJS !== 'undefined') {
+            WinJS.Utilities.setInnerHTMLUnsafe(div, templatesHtml);
+        } else {
+            div.innerHTML = templatesHtml;
+        }
+
         toArray(div.childNodes).forEach(function (childNode) {
             if (childNode.nodeType === 1 && has(childNode, 'id')) {
                 templates[childNode.id] = childNode.innerHTML;
