@@ -48,7 +48,7 @@ define([
         if (value) {
             if (is(value.dataClass, 'string')) {
                 // if dataClass is specified then get the binding from the bindingRouter
-                bindingAccessor = ko.bindingProvider.instance.bindingRouter(value.dataClass);
+                bindingAccessor = ko.bindingProvider.instance.bindingRouter(value.dataClass, ko.bindingProvider.instance.bindings);
                 if (!bindingAccessor) {
                     throw new Error('Don\'t know how to render binding "' + value.dataClass +
                                     '" - no such binding registered. ' +

@@ -3,7 +3,8 @@ define([
     'jasmine-html',
     'scalejs!application',
     './scalejs.mvvm.test',
-    './selectableArray.test'
+    './selectableArray.test',
+    './dataclass.test'
 ], function () {
     'use strict';
 
