@@ -91,23 +91,44 @@ define([
         };
     }
 
+    function getElement(name) {
+        return document.getElementsByTagName(name)[0];
+    }
+
     function init() {
-        var body = document.getElementsByTagName('body')[0],
+        var body,
             opening_comment = document.createComment(' ko class: scalejs-shell '),
             closing_comment = document.createComment(' /ko ');
 
-        body.appendChild(opening_comment);
-        body.appendChild(closing_comment);
+        // Set the node to the parent element of the currently running script
+        body = document.getElementsByTagName('script');
+        body = body[body.length - 1].parentElement;
+        if (!body) {// This will only trigger for 'dev mode'
+            Array.prototype.slice.call(document.getElementsByTagName("script")).forEach(function (el) {
+                if (el.getAttribute('data-main') === "app/app") {
+                    body = el.parent;
+                }
+            });
+        }
 
-        registerBindings({
-            'scalejs-shell': function (context) {
-                return {
-                    render: context.$data.root
-                };
-            }
-        });
+        if (body === getElement('html') || body === getElement('head')) {
+            body = getElement('body');
+        }
 
-        ko.applyBindings({ root: root });
+        if (body) {
+            body.appendChild(opening_comment);
+            body.appendChild(closing_comment);
+
+            registerBindings({
+                'scalejs-shell': function (context) {
+                    return {
+                        render: context.$data.root
+                    };
+                }
+            });
+
+            ko.applyBindings({ root: root }, body);
+        }
     }
 
     return {
