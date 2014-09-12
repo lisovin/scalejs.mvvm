@@ -5,8 +5,6 @@ build:
     - 'uglify'
     - 'copy'
 
-karma:
-    - 'karma'
-
 'serve-test':
-    - 'connect'
+    - 'if-missing:curl-dir:jasmine'
+      #- 'connect'
