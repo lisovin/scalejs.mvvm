@@ -4,3 +4,9 @@ build:
     - 'requirejs'
     - 'uglify'
     - 'copy'
+
+karma:
+    - 'karma'
+
+'serve-test':
+    - 'connect'
