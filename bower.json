@@ -1,0 +1,8 @@
+{
+  "name": "package",
+  "version": "0.4.0",
+  "dependencies": {
+    "scalejs": "lisovin/scalejs#docs"
+  }
+}
+

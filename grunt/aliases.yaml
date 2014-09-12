@@ -1,0 +1,6 @@
+build:
+    #- 'newer:jshint'
+    - 'bower'
+    - 'requirejs'
+    - 'uglify'
+    - 'copy'
