@@ -1,0 +1,11 @@
+{
+  "name": "package",
+  "version": "0.4.0",
+  "dependencies": {
+    "scalejs": "lisovin/scalejs#docs",
+    "scalejs.functional": "lisovin/scalejs.functional#dev",
+    "requirejs": "~2.1.15",
+    "knockout": "~3.2.0",
+    "knockout.mapping": "lisovin/knockout.mapping#master"
+  }
+}
