@@ -4,4 +4,4 @@ module.exports =
         baseUrl: 'src'
 
     configure:
-        rjsConfig: 'build.js'
+        rjsConfig: 'rjsconfig.js'

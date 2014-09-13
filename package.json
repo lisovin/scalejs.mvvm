@@ -21,7 +21,6 @@
     "rjs-build-analysis": "0.0.3"
   },
   "devDependencies": {
-    "grunt-contrib-jasmine": "^0.7.0",
     "grunt-curl": "^2.0.3",
     "grunt-if-missing": "^1.0.0",
     "requirejs": "^2.1.15"

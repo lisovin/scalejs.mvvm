@@ -5,6 +5,6 @@ build:
     - 'uglify'
     - 'copy'
 
-'serve-test':
+'test':
     - 'if-missing:curl-dir:jasmine'
     - 'connect:test'

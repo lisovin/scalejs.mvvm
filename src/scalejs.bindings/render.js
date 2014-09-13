@@ -36,7 +36,7 @@ define([
             if (binding) {
                 ko.applyBindingsToNode(element, binding, viewModel);
             } else {
-                ko.utils.emptyDomNode(element);
+                ko.virtualElements.emptyNode(element);
             }
 
             window.requestAnimationFrame(completed);

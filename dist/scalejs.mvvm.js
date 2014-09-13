@@ -1,4 +1,3 @@
-
 // knockout-classBindingProvider 0.5.0 | (c) 2013 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
 ;(function (factory) {
     //AMD
@@ -653,7 +652,7 @@ define('scalejs.bindings/render',[
             if (binding) {
                 ko.applyBindingsToNode(element, binding, viewModel);
             } else {
-                ko.utils.emptyDomNode(element);
+                ko.virtualElements.emptyNode(element);
             }
 
             window.requestAnimationFrame(completed);
