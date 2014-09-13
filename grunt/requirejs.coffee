@@ -5,7 +5,7 @@ module.exports = ( grunt ) ->
         options:
             baseUrl: 'src'
             include: '<%=package.name%>'
-            exclude: ['scalejs']
+            exclude: ['scalejs', 'knockout', 'knockout.mapping', 'scalejs.functional']
             mainConfigFile: 'build.js'
             out: 'build/<%=package.name%>.js'
             optimize: 'none'

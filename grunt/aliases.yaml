@@ -7,4 +7,4 @@ build:
 
 'serve-test':
     - 'if-missing:curl-dir:jasmine'
-      #- 'connect'
+    - 'connect:test'
