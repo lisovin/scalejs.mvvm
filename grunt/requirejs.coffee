@@ -4,8 +4,13 @@ module.exports = ( grunt ) ->
     build:
         options:
             baseUrl: 'src'
-            include: '<%=package.name%>'
-            exclude: ['scalejs', 'knockout', 'knockout.mapping', 'scalejs.functional']
+            include: ['<%=package.name%>', 'scalejs.mvvm.bindings', 'scalejs.mvvm.views']
+            exclude: [
+                'scalejs', 
+                'knockout', 
+                'knockout.mapping', 
+                'scalejs.functional'
+            ]
             mainConfigFile: 'rjsconfig.js'
             out: 'build/<%=package.name%>.js'
             optimize: 'none'
