@@ -1,0 +1,27 @@
+{
+  "name": "scalejs",
+  "version": "3.3.1",
+  "homepage": "http://lisovin.github.io/scalejs/",
+  "authors": [
+    "Peter Lisovin <peter@lisovin.com>"
+  ],
+  "description": "core of the scalejs framework",
+  "main": [
+    "scalejs.js",
+    "scalejs.min.js"
+  ],
+  "ignore": [
+    "*", "!scalejs.js", "!scalejs.min.js"
+  ],
+  "keywords": [
+    "javascript",
+    "scalejs",
+    "scalable",
+    "application",
+    "framework"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "requirejs": "~2.1.14"
+  }
+}
