@@ -1,11 +1,26 @@
 {
-  "name": "package",
-  "version": "0.4.0",
-  "dependencies": {
-    "scalejs": "lisovin/scalejs",
-    "scalejs.functional": "lisovin/scalejs.functional#dev",
-    "requirejs": "~2.1.15",
-    "knockout": "~3.2.0",
-    "knockout.mapping": "lisovin/knockout.mapping#master"
-  }
+    "name": "scalejs.mvvm",
+    "version": "0.4.0",
+    "homepage": "https://github.com/lisovin/scalejs.mvvm",
+    "authors": [
+        "Peter Lisovin <peter@lisovin.com>"
+    ],
+    "description": "MVVM extension for scalable JavaScript application",
+    "dependencies": {
+        "scalejs": "lisovin/scalejs",
+        "requirejs": "~2.1.15",
+        "scalejs.functional": "lisovin/scalejs.functional#dev"
+    },
+    "main": [
+        "dist/scalejs.mvvm.min.js"
+    ],
+    "ignore": [
+        "*", "!dist/**/*"
+    ],
+    "keywords": [
+        "javascript",
+        "scalejs",
+        "mvvm"
+    ],
+    "license": "MIT"
 }
