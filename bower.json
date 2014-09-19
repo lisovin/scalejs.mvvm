@@ -9,7 +9,8 @@
     "dependencies": {
         "scalejs": "lisovin/scalejs",
         "requirejs": "~2.1.15",
-        "scalejs.functional": "lisovin/scalejs.functional#dev"
+        "scalejs.functional": "lisovin/scalejs.functional",
+        "text": "requires/text"
     },
     "main": [
         "dist/scalejs.mvvm.min.js"
@@ -20,7 +21,8 @@
     "keywords": [
         "javascript",
         "scalejs",
-        "mvvm"
+        "mvvm",
+        "knockout"
     ],
     "license": "MIT"
 }
