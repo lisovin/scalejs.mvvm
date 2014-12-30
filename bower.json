@@ -1,6 +1,6 @@
 {
   "name": "scalejs.mvvm",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "homepage": "https://github.com/lisovin/scalejs.mvvm",
   "authors": [
     "Peter Lisovin <peter@lisovin.com>"
@@ -15,7 +15,7 @@
     "knockout.mapping": "SteveSanderson/knockout.mapping#~2.4.1"
   },
   "main": [
-    "dist/scalejs.mvvm.min.js"
+    "dist/scalejs.mvvm.js"
   ],
   "ignore": [
     "*",
