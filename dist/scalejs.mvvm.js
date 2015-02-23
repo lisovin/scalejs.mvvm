@@ -510,13 +510,11 @@ define('scalejs.mvvm/mvvm',[
         // Set the node to the parent element of the currently running script
         body = document.getElementsByTagName('script');
         body = body[body.length - 1].parentElement;
-        if (!body) {// This will only trigger for 'dev mode'
             Array.prototype.slice.call(document.getElementsByTagName("script")).forEach(function (el) {
-                if (el.getAttribute('data-main') === "app/app") {
-                    body = el.parent;
+                if ((el.getAttribute('data-main') || '').indexOf("app/app") != -1) {
+                    body = el.parentElement
                 }
             });
-        }
 
         if (body === getElement('html') || body === getElement('head')) {
             body = getElement('body');
