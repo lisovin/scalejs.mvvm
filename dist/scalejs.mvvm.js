@@ -502,7 +502,7 @@ define('scalejs.mvvm/mvvm',[
         return document.getElementsByTagName(name)[0];
     }
 
-    function init() {
+    function init(config) {
         var body,
             opening_comment = document.createComment(' ko class: scalejs-shell '),
             closing_comment = document.createComment(' /ko ');
@@ -520,17 +520,17 @@ define('scalejs.mvvm/mvvm',[
             body = getElement('body');
         }
 
-        if (body) {
+        if (body && !config.doNotRender) {
             body.appendChild(opening_comment);
             body.appendChild(closing_comment);
 
-        registerBindings({
-            'scalejs-shell': function (context) {
-                return {
-                    render: context.$data.root
-                };
-            }
-        });
+            registerBindings({
+                'scalejs-shell': function (context) {
+                    return {
+                        render: context.$data.root
+                    };
+                }
+            });
 
             ko.applyBindings({ root: root }, body);
         }
@@ -539,6 +539,7 @@ define('scalejs.mvvm/mvvm',[
     return {
         core: {
             mvvm: {
+                root: root,
                 toJson: toJson,
                 registerBindings: registerBindings,
                 registerTemplates: registerTemplates,
@@ -746,13 +747,15 @@ define('scalejs.mvvm',[
     'knockout',
     'scalejs.mvvm/mvvm',
     './scalejs.bindings/change',
-    './scalejs.bindings/render'
+    './scalejs.bindings/render',
+    'module'
 ], function (
     core,
     ko,
     mvvm,
     changeBinding,
-    renderBinding
+    renderBinding,
+    module
 ) {
     
 
@@ -762,7 +765,7 @@ define('scalejs.mvvm',[
     ko.virtualElements.allowedBindings.change = true;
     ko.virtualElements.allowedBindings.render = true;
 
-    mvvm.init();
+    mvvm.init(module.config());
 
     core.registerExtension(mvvm);
 });
