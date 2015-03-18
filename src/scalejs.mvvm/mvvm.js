@@ -95,7 +95,7 @@ define([
         return document.getElementsByTagName(name)[0];
     }
 
-    function init() {
+    function init(config) {
         var body,
             opening_comment = document.createComment(' ko class: scalejs-shell '),
             closing_comment = document.createComment(' /ko ');
@@ -113,17 +113,17 @@ define([
             body = getElement('body');
         }
 
-        if (body) {
+        if (body && !config.doNotRender) {
             body.appendChild(opening_comment);
             body.appendChild(closing_comment);
 
-        registerBindings({
-            'scalejs-shell': function (context) {
-                return {
-                    render: context.$data.root
-                };
-            }
-        });
+            registerBindings({
+                'scalejs-shell': function (context) {
+                    return {
+                        render: context.$data.root
+                    };
+                }
+            });
 
             ko.applyBindings({ root: root }, body);
         }
