@@ -132,6 +132,7 @@ define([
     return {
         core: {
             mvvm: {
+                root: root,
                 toJson: toJson,
                 registerBindings: registerBindings,
                 registerTemplates: registerTemplates,
