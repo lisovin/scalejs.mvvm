@@ -209,62 +209,68 @@ define('scalejs.mvvm/htmlTemplateSource',[
     ko,
     core
 ) {
-    
+    'use strict';
 
     var toArray = core.array.toArray,
         has = core.object.has,
         templateEngine = new ko.nativeTemplateEngine(),
         templates = {
-            data: {}
+            data: { }
         };
 
-    function registerTemplates(templatesHtml) {
+    function registerTemplates ( templatesHtml ) {
         // iterate through all templates (e.g. children of root in templatesHtml)
-        // for every child get its templateId and templateHtml 
-        // and add it to 'templates'            
+        // for every child get its templateId and templateHtml
+        // and add it to 'templates'
         var div = document.createElement('div');
 
         if (typeof WinJS !== 'undefined') {
             WinJS.Utilities.setInnerHTMLUnsafe(div, templatesHtml);
         } else {
-        div.innerHTML = templatesHtml;
+            div.innerHTML = templatesHtml;
         }
 
-        toArray(div.childNodes).forEach(function (childNode) {
+        toArray(div.childNodes).forEach(function ( childNode ) {
             if (childNode.nodeType === 1 && has(childNode, 'id')) {
                 templates[childNode.id] = childNode.innerHTML;
             }
         });
     }
 
-    function makeTemplateSource(templateId) {
-        function data(key, value) {
-            if (!has(templates.data, templateId)) {
-                templates.data[templateId] = {};
-            }
+    function makeTemplateSource ( template ) {
 
-            // if called with only key then return the associated value
-            if (arguments.length === 1) {
-                return templates.data[templateId][key];
-            }
-
-            // if called with key and value then store the value
-            templates.data[templateId][key] = value;
-        }
-
-        function text(value) {
-            // if no value return the template content since that's what KO wants
-            if (arguments.length === 0) {
-                return templates[templateId];
-            }
-
-            throw new Error('An attempt to override template "' + templateId + '" with content "' + value + '" ' +
-                            'Template overriding is not supported.');
+        if ( template instanceof Element ) {
+            return {
+                nodes: ko.templateSources.domElement.prototype
+                    .nodes.bind({ domElement: template })
+            };
         }
 
         return {
-            data: data,
-            text: text
+            data: function ( key, value ) {
+                if (!has(templates.data, template)) {
+                    templates.data[template] = { };
+                }
+
+                // if called with only key then return the associated value
+                if (arguments.length === 1) {
+                    return templates.data[template][key];
+                }
+
+                // if called with key and value then store the value
+                templates.data[template][key] = value;
+            },
+            text: function ( value ) {
+                // if no value return the template content
+                // since that's what KO wants
+                if (arguments.length === 0) {
+                    return templates[template];
+                }
+
+                throw new Error('An attempt to override template "' +
+                                template + '" with content "' + value + '" ' +
+                                'Template overriding is not supported.');
+            }
         };
     }
 
@@ -288,7 +294,7 @@ define('scalejs.mvvm/selectableArray',[
     core
 ) {
     /// <param name="ko" value="window.ko"/>
-    
+    'use strict';
 
     var isObservable = ko.isObservable,
         unwrap = ko.utils.unwrapObservable,
@@ -391,7 +397,7 @@ define('scalejs.mvvm/ko.utils',[
     core,
     ko
 ) {
-    
+    'use strict';
 
     function cloneNodes(nodesArray, shouldCleanNodes) {
         return core.array.toArray(nodesArray).map(function (node) {
@@ -424,7 +430,7 @@ define('scalejs.mvvm/mvvm',[
     selectableArray,
     koUtils
 ) {
-    
+    'use strict';
 
     var merge = core.object.merge,
         toArray = core.array.toArray,
@@ -581,7 +587,7 @@ define('scalejs.bindings/change',[
     ko,
     core
 ) {
-    
+    'use strict';
 
     var is = core.type.is,
         has = core.object.has;
@@ -655,7 +661,7 @@ define('scalejs.bindings/render',[
     ko
 ) {
     /// <param name="ko" value="window.ko" />
-    
+    'use strict';
 
     var is = core.type.is,
         has = core.object.has,
@@ -757,7 +763,7 @@ define('scalejs.mvvm',[
     renderBinding,
     module
 ) {
-    
+    'use strict';
 
     ko.bindingHandlers.change = changeBinding;
     ko.bindingHandlers.render = renderBinding;
@@ -774,7 +780,7 @@ define('scalejs.mvvm',[
 /*global define*/
 /*jslint unparam:true*/
 define('scalejs.mvvm.bindings',[],function () {
-    
+    'use strict';
 
     return {
         load: function (name, req, onLoad, config) {
@@ -817,7 +823,7 @@ define('scalejs.mvvm.bindings',[],function () {
 /*global define*/
 /*jslint unparam:true*/
 define('scalejs.mvvm.views',[],function () {
-    
+    'use strict';
 
     return {
         load: function (name, req, onLoad, config) {
